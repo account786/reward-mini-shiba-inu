@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShibaEarn Pro - Complete Tasks & Earn Crypto</title>
+    
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src='//libtl.com/sdk.js' data-zone='10712237' data-sdk='show_10712237'></script>
     <style>
         /* Premium Background and Fonts */
         body {
@@ -301,6 +304,21 @@
         .group-btn.active::after {
             transform: rotate(-180deg);
         }
+        
+        /* Bonus Button Style */
+        .bonus-btn {
+            background-color: #2ecc71;
+            text-align: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        .bonus-btn:hover {
+            background-color: #27ae60;
+        }
+        .bonus-btn::after {
+            content: none; /* Remove arrow for bonus button */
+        }
 
         /* CSS Grid for Links */
         .group-content {
@@ -405,7 +423,7 @@
                 <p style="color: #666; font-size: 14px;">You have successfully completed the task.</p>
                 
                 <div class="stats-box">
-                    <p>Reward Earned: <strong>+25 SHIB</strong></p>
+                    <p>Reward Earned: <strong id="dynamic-reward">+25 SHIB</strong></p>
                     <p>Total Balance: <strong id="popup-total-shib">0</strong> SHIB</p>
                     <p>Converted Value: <strong style="color:#27ae60;">$<span id="popup-total-usd">0.0000</span> USD</strong></p>
                 </div>
@@ -454,6 +472,10 @@
             </div>
         </div>
 
+        <button class="group-btn bonus-btn" onclick="showBonusAd()">
+            📺 Watch Video & Earn Bonus (+100 SHIB)
+        </button>
+
         <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links)</button>
         <div class="group-content" id="group1"></div>
 
@@ -462,7 +484,33 @@
     </div>
 
     <script>
-        // Links Data
+        // ================= TELEGRAM SDK INITIALIZATION =================
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // টেলিগ্রামে ফুলস্ক্রিন করবে
+        // ==============================================================
+
+        // ================= AUTO IN-APP AD SETUP =======================
+        // অ্যাপ ওপেন হওয়ার সাথে সাথেই ব্যাকগ্রাউন্ডে অটোমেটিক অ্যাড রেডি হবে
+        if (typeof show_10712237 === 'function') {
+            try {
+                show_10712237({
+                  type: 'inApp',
+                  inAppSettings: {
+                    frequency: 2,
+                    capping: 0.1,
+                    interval: 30,
+                    timeout: 5,
+                    everyPage: false
+                  }
+                });
+            } catch (e) {
+                console.log("Auto ad failed to load:", e);
+            }
+        }
+        // ==============================================================
+
+        // Links Data (আপনার আগের ৪৫টি লিংক অক্ষত আছে)
         const group1Links = [
             "https://www.effectivegatecpm.com/kyi071pib?key=f97ab34f903ea845e2d6e024b4eb4802", "https://www.effectivegatecpm.com/h5i0v8cj?key=b84cdb24e61ca63ce399c60aed1494cb",
             "https://www.effectivegatecpm.com/j5801bm8ra?key=0434dc1a443644cfa9bea67db8fed92f", "https://www.effectivegatecpm.com/w4pfsi9wj?key=b1c2d91a66df19212575e70a95e0c71b",
@@ -489,8 +537,8 @@
 
         // Economics Settings
         const SHIB_PER_CLICK = 25;
-        const SHIB_TO_USD_RATE = 0.00003; // Conversion rate for calculating USD
-        const COOLDOWN_TIME = 30 * 60 * 1000; // 30 Minutes
+        const SHIB_TO_USD_RATE = 0.00003; 
+        const COOLDOWN_TIME = 30 * 60 * 1000; 
         const MIN_WITHDRAW_SHIB = 335000; 
 
         // Load Balance
@@ -499,27 +547,46 @@
         // Update Displays
         function updateDisplay() {
             const usdValue = currentShibBalance * SHIB_TO_USD_RATE;
-            
-            // Format SHIB with commas (e.g., 1,500)
             document.getElementById('user-balance-shib').innerText = currentShibBalance.toLocaleString();
             document.getElementById('user-balance-usd').innerText = usdValue.toFixed(4);
-            
-            // Update Popup displays as well
             document.getElementById('popup-total-shib').innerText = currentShibBalance.toLocaleString();
             document.getElementById('popup-total-usd').innerText = usdValue.toFixed(4);
         }
         
-        // Initial call to set text
         updateDisplay();
 
         // Success Modal Logic
-        function showSuccessModal() {
+        function showSuccessModal(rewardAmount) {
+            document.getElementById('dynamic-reward').innerText = `+${rewardAmount} SHIB`;
             document.getElementById('successModal').style.display = 'flex';
+            
+            // হ্যাপটিক ফিডব্যাক (মোবাইলে ভাইব্রেশন)
+            if(tg.HapticFeedback) {
+                tg.HapticFeedback.notificationOccurred('success');
+            }
         }
 
         function closeSuccessModal() {
             document.getElementById('successModal').style.display = 'none';
         }
+
+        // ================= BONUS AD FUNCTION =================
+        function showBonusAd() {
+            if (typeof show_10712237 === 'function') {
+                show_10712237('pop').then(() => {
+                    // ইউজার অ্যাড পুরোপুরি দেখলে 100 SHIB পাবে
+                    currentShibBalance += 100;
+                    localStorage.setItem('shib_balance', currentShibBalance);
+                    updateDisplay();
+                    showSuccessModal(100);
+                }).catch(e => {
+                    tg.showAlert('Ad is not ready yet or was closed. Please try again later.');
+                });
+            } else {
+                tg.showAlert('Ad system is still loading. Please wait a moment.');
+            }
+        }
+        // =======================================================
 
         // Withdraw Logic
         function openWithdrawModal() {
@@ -532,7 +599,7 @@
 
         function submitWithdraw() {
             if (currentShibBalance < MIN_WITHDRAW_SHIB) {
-                alert(`Insufficient Balance!\nYou need at least ${MIN_WITHDRAW_SHIB.toLocaleString()} SHIB to withdraw.\nCurrent Balance: ${currentShibBalance.toLocaleString()} SHIB`);
+                tg.showAlert(`Insufficient Balance!\nYou need at least ${MIN_WITHDRAW_SHIB.toLocaleString()} SHIB to withdraw.`);
                 return;
             }
 
@@ -540,24 +607,22 @@
             const address = document.getElementById('withdrawAddress').value;
 
             if (address.trim() === "") {
-                alert("Please enter your Wallet Address or Binance ID.");
+                tg.showAlert("Please enter your Wallet Address or Binance ID.");
                 return;
             }
 
-            // Success Action
             const finalUsd = (currentShibBalance * SHIB_TO_USD_RATE).toFixed(2);
-            alert(`Success! Withdrawal request of ${currentShibBalance.toLocaleString()} SHIB (~$${finalUsd}) via ${method} has been submitted.\n\nAddress: ${address}\n\nPlease allow 24-48 hours for processing.`);
+            tg.showAlert(`Success! Withdrawal of ${currentShibBalance.toLocaleString()} SHIB via ${method} submitted.\nAllow 24-48 hours.`);
             
-            // Deduct Balance and Reset
             currentShibBalance = 0;
             localStorage.setItem('shib_balance', currentShibBalance);
             updateDisplay();
             
             closeWithdrawModal();
-            document.getElementById('withdrawAddress').value = ""; // Clear input
+            document.getElementById('withdrawAddress').value = ""; 
         }
 
-        // Button Creation Function
+        // Button Creation Function (আগের মতোই আছে)
         function createButtons(linksArray, containerId, groupIdPrefix) {
             const container = document.getElementById(containerId);
             
@@ -572,20 +637,18 @@
                 button.innerHTML = `Task ${btnNumber} <span class="timer-text" id="timer-${uniqueId}" style="display:none;"></span>`;
                 
                 button.onclick = function() {
-                    // Open link in new tab
+                    // ওপেন লিঙ্ক
                     window.open(link, '_blank');
 
-                    // Update Balance
+                    // ব্যালেন্স যোগ
                     currentShibBalance += SHIB_PER_CLICK;
                     localStorage.setItem('shib_balance', currentShibBalance);
                     updateDisplay();
                     
-                    // Show Success Popup
                     setTimeout(() => {
-                        showSuccessModal();
-                    }, 500); // 0.5 second delay makes it look more natural
+                        showSuccessModal(SHIB_PER_CLICK);
+                    }, 500); 
                     
-                    // Set Timer
                     const endTime = Date.now() + COOLDOWN_TIME;
                     localStorage.setItem(storageKey, endTime);
                     
@@ -594,7 +657,6 @@
                 
                 container.appendChild(button);
 
-                // Check timers on reload
                 const savedEndTime = localStorage.getItem(storageKey);
                 if (savedEndTime) {
                     if (Date.now() < savedEndTime) {
@@ -606,11 +668,9 @@
             });
         }
 
-        // Initialize groups
         createButtons(group1Links, 'group1', 'g1');
         createButtons(group2Links, 'group2', 'g2');
 
-        // Accordion functionality
         function toggleGroup(groupId, btnElement) {
             const content = document.getElementById(groupId);
             if (content.style.display === "grid") {
@@ -622,7 +682,6 @@
             }
         }
 
-        // Format time to MM:SS
         function formatTime(secondsLeft) {
             const minutes = Math.floor(secondsLeft / 60);
             const seconds = secondsLeft % 60;
@@ -631,7 +690,6 @@
             return `${formattedMinutes}:${formattedSeconds}`;
         }
 
-        // Timer Function
         function startTimer(button, uniqueId, endTime, storageKey) {
             button.disabled = true;
             const timerSpan = document.getElementById(`timer-${uniqueId}`);
