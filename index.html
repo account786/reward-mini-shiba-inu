@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShibaEarn Pro - Complete Tasks & Earn Crypto</title>
+    <style>
+        /* Premium Background and Fonts */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            margin: 0;
+            padding: 20px 10px;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        /* App Header & Logo Design */
+        .app-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            filter: drop-shadow(0 8px 15px rgba(245, 166, 35, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .app-title {
+            color: #e67e22;
+            margin: 12px 0 5px 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .app-subtitle {
+            color: #64748b;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Balance Card Design (Crypto Theme) */
+        .balance-card {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #fff;
+            padding: 25px 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(253, 160, 133, 0.4);
+        }
+
+        .balance-card h2 {
+            margin: 0;
+            font-size: 34px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .balance-usd {
+            background: rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .balance-card p {
+            margin: 12px 0 18px 0;
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 600;
+        }
+
+        /* Withdraw Button */
+        .withdraw-btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .withdraw-btn:hover {
+            background-color: #000;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        /* Modal / Popup Design */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.6); 
+            backdrop-filter: blur(5px);
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #e67e22;
+            font-size: 22px;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+
+        .stats-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #e9ecef;
+        }
+
+        .stats-box p {
+            margin: 8px 0;
+            font-size: 15px;
+            color: #444;
+        }
+
+        .stats-box strong {
+            color: #e67e22;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn-submit {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            font-size: 15px;
+            width: 100%;
+        }
+
+        .btn-cancel {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            font-size: 15px;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #fff3e0;
+            border-left: 5px solid #e67e22;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .info-box ul {
+            margin: 0;
+            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            list-style-type: none;
+        }
+
+        .info-box ul li {
+            background: #ffe0b2;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #d35400;
+            font-weight: 700;
+        }
+
+        .info-box .footer-text {
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #c0392b;
+            text-align: center;
+        }
+
+        /* Accordion Buttons */
+        .group-btn {
+            background-color: #e67e22;
+            color: white;
+            cursor: pointer;
+            padding: 16px 20px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: 0.3s;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
+        }
+
+        .group-btn:hover, .group-btn.active {
+            background-color: #d35400;
+            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.3);
+        }
+
+        .group-btn::after {
+            content: '\25BC';
+            font-size: 14px;
+            transition: transform 0.3s ease;
+        }
+
+        .group-btn.active::after {
+            transform: rotate(-180deg);
+        }
+
+        /* CSS Grid for Links */
+        .group-content {
+            display: none; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            padding: 10px 0 25px 0;
+        }
+
+        .ad-btn {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: white;
+            border: none;
+            padding: 12px 2px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(253, 160, 133, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 65px;
+            width: 100%;
+        }
+
+        .ad-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(253, 160, 133, 0.5);
+        }
+
+        .ad-btn:disabled {
+            background: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .timer-text {
+            font-size: 11px;
+            font-weight: normal;
+            margin-top: 5px;
+            background: rgba(0,0,0,0.1);
+            padding: 3px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        
+        .ad-btn:disabled .timer-text {
+            background: rgba(255, 255, 255, 0.7);
+            color: #dc2626;
+            font-weight: 800;
+        }
+
+        @media (min-width: 768px) {
+            .group-content {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 15px;
+            }
+            .ad-btn {
+                font-size: 15px;
+                min-height: 75px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <div class="app-header">
+            <svg class="app-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="url(#paint0_linear)" />
+                <path d="M50 15L80 35V65L50 85L20 65V35L50 15Z" fill="#fff" opacity="0.2"/>
+                <text x="50" y="65" font-family="Arial" font-size="45" font-weight="bold" fill="#fff" text-anchor="middle">S</text>
+                <defs>
+                    <linearGradient id="paint0_linear" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#f6d365"/>
+                        <stop offset="1" stop-color="#fda085"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <h1 class="app-title">ShibaEarn Pro</h1>
+            <p class="app-subtitle">Complete Tasks & Collect SHIB</p>
+        </div>
+
+        <div class="balance-card">
+            <h2><span id="user-balance-shib">0</span> SHIB</h2>
+            <div class="balance-usd">≈ $<span id="user-balance-usd">0.0000</span> USD</div>
+            <p>Earn +25 SHIB per task! (Min. Withdrawal: 335,000 SHIB / ~$10.00)</p>
+            <button class="withdraw-btn" onclick="openWithdrawModal()">Withdraw Crypto</button>
+        </div>
+
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <div class="success-icon">✔</div>
+                <h3 style="color: #2ecc71;">Task Successful!</h3>
+                <p style="color: #666; font-size: 14px;">You have successfully completed the task.</p>
+                
+                <div class="stats-box">
+                    <p>Reward Earned: <strong>+25 SHIB</strong></p>
+                    <p>Total Balance: <strong id="popup-total-shib">0</strong> SHIB</p>
+                    <p>Converted Value: <strong style="color:#27ae60;">$<span id="popup-total-usd">0.0000</span> USD</strong></p>
+                </div>
+
+                <button class="btn-submit" onclick="closeSuccessModal()">Awesome! Continue</button>
+            </div>
+        </div>
+
+        <div id="withdrawModal" class="modal">
+            <div class="modal-content" style="text-align: left;">
+                <h3 style="text-align: center;">Withdraw Funds</h3>
+                <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Minimum withdrawal is 335,000 SHIB (~$10.00)</p>
+                
+                <div class="form-group">
+                    <label for="withdrawMethod">Payment Method</label>
+                    <select id="withdrawMethod">
+                        <option value="Binance">Binance (Pay ID / Email)</option>
+                        <option value="BEP20">USDT / SHIB (BEP20 Address)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="withdrawAddress">Wallet Address / Binance Details</label>
+                    <input type="text" id="withdrawAddress" placeholder="Enter your ID or Address here" required>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-submit" style="width:auto;" onclick="submitWithdraw()">Submit</button>
+                    <button class="btn-cancel" onclick="closeWithdrawModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <ul>
+                <li>United States (USA)</li>
+                <li>United Kingdom (UK)</li>
+                <li>Canada</li>
+                <li>Australia</li>
+                <li>New Zealand</li>
+                <li>Germany</li>
+                <li>France</li>
+            </ul>
+            <div class="footer-text">
+                Targeted Premium Countries for maximum rewards!
+            </div>
+        </div>
+
+        <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links)</button>
+        <div class="group-content" id="group1"></div>
+
+        <button class="group-btn" onclick="toggleGroup('group2', this)">Task Group 2 (20 Links)</button>
+        <div class="group-content" id="group2"></div>
+    </div>
+
+    <script>
+        // Links Data
+        const group1Links = [
+            "https://www.effectivegatecpm.com/kyi071pib?key=f97ab34f903ea845e2d6e024b4eb4802", "https://www.effectivegatecpm.com/h5i0v8cj?key=b84cdb24e61ca63ce399c60aed1494cb",
+            "https://www.effectivegatecpm.com/j5801bm8ra?key=0434dc1a443644cfa9bea67db8fed92f", "https://www.effectivegatecpm.com/w4pfsi9wj?key=b1c2d91a66df19212575e70a95e0c71b",
+            "https://www.effectivegatecpm.com/jdnz9mt9kb?key=c3c7829a7545af5bf949089518774889", "https://www.effectivegatecpm.com/hb8na21vz?key=4bd433cc342e69199df1fb700a6ba999",
+            "https://www.effectivegatecpm.com/k9xkfgxrqi?key=39308c0bdedefcb10a3368cc7279789", "https://www.effectivegatecpm.com/ban6uh9gy?key=c3d322b30e1e375fdd807eda48a13ca",
+            "https://www.effectivegatecpm.com/kia6ntn5?key=34708c8678795457ba3a280f508e5b08", "https://www.effectivegatecpm.com/t93gmtqt9d?key=ce93562702e4420b6fb5bbe3a2837f67",
+            "https://www.effectivegatecpm.com/mrba7a4jbn?key=d39d14ff072dff0231856bf4990aeb2f", "https://www.effectivegatecpm.com/xdkrdz8w?key=fab87a1485d3669dd5a928e7d6276d0e",
+            "https://www.effectivegatecpm.com/ux9ryxvy?key=a5af903ef9c66b5f98992672c8e106f7", "https://www.effectivegatecpm.com/k7jpaetm?key=cc5b62121dbb1ecd7f39fb1c7ab9c1ef",
+            "https://www.effectivegatecpm.com/t6gxem45?key=01b5ea05f9992dfb2d73b35ff8a6066d", "https://www.effectivegatecpm.com/z5e91wcmg?key=e8c547de81fd1b675499397ba5a33e5b",
+            "https://www.effectivegatecpm.com/rnij3ey3?key=b3f17c6ea620efa3b404ed56c036fcac", "https://www.effectivegatecpm.com/bmq78u03?key=89faf07c005584a51105a6b958e53efb",
+            "https://www.effectivegatecpm.com/d0jbudjyu0?key=d67abd9cc8e20ed55437f604e2784332", "https://www.effectivegatecpm.com/fri1dnia?key=2fedf5fe0ab00da2213895ea9f5c4837",
+            "https://www.effectivegatecpm.com/cg57h25rsv?key=ca9d525cef698a8cc419ae5e30cf6ac3", "https://www.effectivegatecpm.com/x4fphhqvus?key=4285f91bccc2f411e69adbd7a26bb515",
+            "https://www.effectivegatecpm.com/xpr9pukppq?key=b56b39d77c89daac0b182b78d8a2f400", "https://www.effectivegatecpm.com/f6x9ct89sc?key=c0163db3a26b1ffb952e0e985dc66753",
+            "https://www.effectivegatecpm.com/qt5st7c29h?key=bdd5559eb481d66b02282f7d1f02f02d"
+        ];
+
+        const group2Links = [
+            "https://omg10.com/4/10711242", "https://omg10.com/4/6927831", "https://omg10.com/4/10711249", "https://omg10.com/4/10711258",
+            "https://omg10.com/4/10711261", "https://omg10.com/4/7150174", "https://omg10.com/4/10711255", "https://omg10.com/4/10711248",
+            "https://omg10.com/4/10711256", "https://omg10.com/4/10711254", "https://omg10.com/4/10711260", "https://omg10.com/4/10711251",
+            "https://omg10.com/4/10711247", "https://omg10.com/4/7230153", "https://omg10.com/4/10711253", "https://omg10.com/4/10711246",
+            "https://omg10.com/4/10711259", "https://omg10.com/4/10711252", "https://omg10.com/4/10711245", "https://omg10.com/4/10711250"
+        ];
+
+        // Economics Settings
+        const SHIB_PER_CLICK = 25;
+        const SHIB_TO_USD_RATE = 0.00003; // Conversion rate for calculating USD
+        const COOLDOWN_TIME = 30 * 60 * 1000; // 30 Minutes
+        const MIN_WITHDRAW_SHIB = 335000; 
+
+        // Load Balance
+        let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
+        
+        // Update Displays
+        function updateDisplay() {
+            const usdValue = currentShibBalance * SHIB_TO_USD_RATE;
+            
+            // Format SHIB with commas (e.g., 1,500)
+            document.getElementById('user-balance-shib').innerText = currentShibBalance.toLocaleString();
+            document.getElementById('user-balance-usd').innerText = usdValue.toFixed(4);
+            
+            // Update Popup displays as well
+            document.getElementById('popup-total-shib').innerText = currentShibBalance.toLocaleString();
+            document.getElementById('popup-total-usd').innerText = usdValue.toFixed(4);
+        }
+        
+        // Initial call to set text
+        updateDisplay();
+
+        // Success Modal Logic
+        function showSuccessModal() {
+            document.getElementById('successModal').style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Withdraw Logic
+        function openWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'flex';
+        }
+
+        function closeWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'none';
+        }
+
+        function submitWithdraw() {
+            if (currentShibBalance < MIN_WITHDRAW_SHIB) {
+                alert(`Insufficient Balance!\nYou need at least ${MIN_WITHDRAW_SHIB.toLocaleString()} SHIB to withdraw.\nCurrent Balance: ${currentShibBalance.toLocaleString()} SHIB`);
+                return;
+            }
+
+            const method = document.getElementById('withdrawMethod').value;
+            const address = document.getElementById('withdrawAddress').value;
+
+            if (address.trim() === "") {
+                alert("Please enter your Wallet Address or Binance ID.");
+                return;
+            }
+
+            // Success Action
+            const finalUsd = (currentShibBalance * SHIB_TO_USD_RATE).toFixed(2);
+            alert(`Success! Withdrawal request of ${currentShibBalance.toLocaleString()} SHIB (~$${finalUsd}) via ${method} has been submitted.\n\nAddress: ${address}\n\nPlease allow 24-48 hours for processing.`);
+            
+            // Deduct Balance and Reset
+            currentShibBalance = 0;
+            localStorage.setItem('shib_balance', currentShibBalance);
+            updateDisplay();
+            
+            closeWithdrawModal();
+            document.getElementById('withdrawAddress').value = ""; // Clear input
+        }
+
+        // Button Creation Function
+        function createButtons(linksArray, containerId, groupIdPrefix) {
+            const container = document.getElementById(containerId);
+            
+            linksArray.forEach((link, index) => {
+                const btnNumber = index + 1;
+                const uniqueId = `${groupIdPrefix}-${index}`;
+                const storageKey = `cooldown_time_${uniqueId}`;
+                
+                const button = document.createElement('button');
+                button.className = 'ad-btn';
+                button.id = `btn-${uniqueId}`;
+                button.innerHTML = `Task ${btnNumber} <span class="timer-text" id="timer-${uniqueId}" style="display:none;"></span>`;
+                
+                button.onclick = function() {
+                    // Open link in new tab
+                    window.open(link, '_blank');
+
+                    // Update Balance
+                    currentShibBalance += SHIB_PER_CLICK;
+                    localStorage.setItem('shib_balance', currentShibBalance);
+                    updateDisplay();
+                    
+                    // Show Success Popup
+                    setTimeout(() => {
+                        showSuccessModal();
+                    }, 500); // 0.5 second delay makes it look more natural
+                    
+                    // Set Timer
+                    const endTime = Date.now() + COOLDOWN_TIME;
+                    localStorage.setItem(storageKey, endTime);
+                    
+                    startTimer(button, uniqueId, endTime, storageKey);
+                };
+                
+                container.appendChild(button);
+
+                // Check timers on reload
+                const savedEndTime = localStorage.getItem(storageKey);
+                if (savedEndTime) {
+                    if (Date.now() < savedEndTime) {
+                        startTimer(button, uniqueId, savedEndTime, storageKey);
+                    } else {
+                        localStorage.removeItem(storageKey);
+                    }
+                }
+            });
+        }
+
+        // Initialize groups
+        createButtons(group1Links, 'group1', 'g1');
+        createButtons(group2Links, 'group2', 'g2');
+
+        // Accordion functionality
+        function toggleGroup(groupId, btnElement) {
+            const content = document.getElementById(groupId);
+            if (content.style.display === "grid") {
+                content.style.display = "none";
+                btnElement.classList.remove("active");
+            } else {
+                content.style.display = "grid";
+                btnElement.classList.add("active");
+            }
+        }
+
+        // Format time to MM:SS
+        function formatTime(secondsLeft) {
+            const minutes = Math.floor(secondsLeft / 60);
+            const seconds = secondsLeft % 60;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+            const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+            return `${formattedMinutes}:${formattedSeconds}`;
+        }
+
+        // Timer Function
+        function startTimer(button, uniqueId, endTime, storageKey) {
+            button.disabled = true;
+            const timerSpan = document.getElementById(`timer-${uniqueId}`);
+            timerSpan.style.display = 'inline-block'; 
+            
+            const updateInterval = setInterval(() => {
+                const now = Date.now();
+                const timeLeft = Math.ceil((endTime - now) / 1000); 
+                
+                if (timeLeft > 0) {
+                    timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`;
+                } else {
+                    clearInterval(updateInterval);
+                    button.disabled = false;
+                    timerSpan.style.display = 'none'; 
+                    localStorage.removeItem(storageKey);
+                }
+            }, 1000);
+            
+            const initialTimeLeft = Math.ceil((endTime - Date.now()) / 1000);
+            if(initialTimeLeft > 0) {
+                timerSpan.innerText = `Wait: ${formatTime(initialTimeLeft)}`;
+            }
+        }
+    </script>
+
+</body>
+</html>
