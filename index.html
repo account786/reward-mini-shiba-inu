@@ -23,7 +23,7 @@
         .app-subtitle { color: #64748b; margin: 0; font-size: 14px; font-weight: 500; }
 
         /* Balance Card Design */
-        .balance-card { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #fff; padding: 25px 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(253, 160, 133, 0.4); }
+        .balance-card { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #fff; padding: 25px 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(253, 160, 133, 0.4); }
         .balance-card h2 { margin: 0; font-size: 34px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .balance-usd { background: rgba(255, 255, 255, 0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; margin-top: 10px; }
         .balance-card p { margin: 12px 0 18px 0; font-size: 14px; font-weight: 600; }
@@ -31,6 +31,16 @@
         /* Withdraw Button */
         .withdraw-btn { background-color: #333; color: #fff; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease; }
         .withdraw-btn:hover { background-color: #000; transform: scale(1.05); }
+
+        /* Referral System Design */
+        .referral-box { background: #eef2f3; border: 2px dashed #3498db; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; }
+        .referral-box h3 { margin: 0 0 10px 0; color: #2980b9; font-size: 20px; }
+        .referral-box p { margin: 0 0 15px 0; font-size: 14px; color: #555; }
+        .referral-box input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; color: #333; margin-bottom: 15px; text-align: center; background: #fff; box-sizing: border-box; }
+        .ref-buttons { display: flex; gap: 10px; justify-content: center; }
+        .ref-buttons button { flex: 1; padding: 10px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-copy { background-color: #f39c12; } .btn-copy:hover { background-color: #e67e22; }
+        .btn-share { background-color: #2980b9; } .btn-share:hover { background-color: #3498db; }
 
         /* Modal Design */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
@@ -58,6 +68,7 @@
         .bonus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
         .bonus-btn { text-align: center; justify-content: center; padding: 12px 5px; font-size: 13px; border-radius: 8px; color: white; font-weight: bold; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: 0.3s; }
         .bonus-btn:disabled { background: #cbd5e1 !important; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        
         .b-color-1 { background-color: #2ecc71; } .b-color-1:hover:not(:disabled) { background-color: #27ae60; }
         .b-color-2 { background-color: #9b59b6; } .b-color-2:hover:not(:disabled) { background-color: #8e44ad; }
         .b-color-3 { background-color: #e74c3c; } .b-color-3:hover:not(:disabled) { background-color: #c0392b; }
@@ -80,8 +91,7 @@
         @media (min-width: 768px) { .group-content { grid-template-columns: repeat(5, 1fr); gap: 15px; } .ad-btn { font-size: 15px; min-height: 75px; } }
 
         /* Sponsor Banner Area */
-        .sponsor-area { text-align: center; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
-        .sponsor-box { margin-bottom: 15px; }
+        .sponsor-box { text-align: center; margin: 20px auto; overflow: hidden; max-width: 100%; display: flex; justify-content: center; }
 
     </style>
 </head>
@@ -97,43 +107,26 @@
         <div class="balance-card">
             <h2><span id="user-balance-shib">0</span> SHIB</h2>
             <div class="balance-usd">≈ $<span id="user-balance-usd">0.0000</span> USD</div>
-            <p>Earn +75 SHIB per task! (Min. Withdrawal: 335,000 SHIB / ~$10.00)</p>
+            <p>Earn +75 SHIB per task! (Min. Withdrawal: 167,500 SHIB / ~$5.00)</p>
             <button class="withdraw-btn" onclick="openWithdrawModal()">Withdraw Crypto</button>
         </div>
 
-        <h3 style="text-align: center; color: #555; font-size: 16px; margin-bottom: 10px;">🌟 Sponsors</h3>
-        <div class="sponsor-area">
-            
-            <div class="sponsor-box">
-                <script>
-                  atOptions = { 'key' : 'db4bc868d59bcc0f2a246aeba88d9042', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script src="https://www.highperformanceformat.com/db4bc868d59bcc0f2a246aeba88d9042/invoke.js"></script>
+        <div class="referral-box">
+            <h3>👥 Invite Friends</h3>
+            <p>Share your link and earn <strong>+500 SHIB</strong> per active referral!</p>
+            <input type="text" id="ref-link" value="Loading..." readonly>
+            <div class="ref-buttons">
+                <button class="btn-copy" onclick="copyRefLink()">📋 Copy Link</button>
+                <button class="btn-share" onclick="shareToTelegram()">✈️ Share</button>
             </div>
-
-            <div class="sponsor-box">
-                <script>
-                  atOptions = { 'key' : '3133e6f82f5691b24dc4b9f367ed8ab0', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script src="https://www.highperformanceformat.com/3133e6f82f5691b24dc4b9f367ed8ab0/invoke.js"></script>
-            </div>
-
-            <div class="sponsor-box">
-                <script>
-                  atOptions = { 'key' : '85dc5000b91ad022af02984ae9d36de7', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script src="https://www.highperformanceformat.com/85dc5000b91ad022af02984ae9d36de7/invoke.js"></script>
-            </div>
-
-            <div class="sponsor-box">
-                <script>
-                  atOptions = { 'key' : 'b688e836df38a052e2c1ead436fa659d', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-                </script>
-                <script src="https://www.highperformanceformat.com/b688e836df38a052e2c1ead436fa659d/invoke.js"></script>
-            </div>
-
         </div>
-        <h3 style="text-align: center; color: #555; font-size: 16px; margin-bottom: 10px;">🎁 Bonus Reward Ads</h3>
+        <div class="sponsor-box">
+            <script>
+              atOptions = { 'key' : 'db4bc868d59bcc0f2a246aeba88d9042', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/db4bc868d59bcc0f2a246aeba88d9042/invoke.js"></script>
+        </div>
+        <h3 style="text-align: center; color: #555; font-size: 16px; margin-bottom: 10px; margin-top: 15px;">🎁 Bonus Reward Ads</h3>
         <div class="bonus-grid">
             <button id="bonus-btn-1" class="bonus-btn b-color-1" onclick="processBonusAd('bonus-btn-1', 25, '10712237_pop', 'cd_bonus_1')">Ad 1 (Pop) <span class="bonus-timer-text" id="timer-bonus-btn-1" style="display:none;"></span></button>
             <button id="bonus-btn-2" class="bonus-btn b-color-2" onclick="processBonusAd('bonus-btn-2', 25, '10712237_int', 'cd_bonus_2')">Ad 2 (Video) <span class="bonus-timer-text" id="timer-bonus-btn-2" style="display:none;"></span></button>
@@ -143,12 +136,31 @@
             <button id="bonus-btn-6" class="bonus-btn b-color-6" onclick="processBonusAd('bonus-btn-6', 25, '10701142_int', 'cd_bonus_6')">Ad 6 (Video) <span class="bonus-timer-text" id="timer-bonus-btn-6" style="display:none;"></span></button>
         </div>
 
+        <div class="sponsor-box">
+            <script>
+              atOptions = { 'key' : '3133e6f82f5691b24dc4b9f367ed8ab0', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/3133e6f82f5691b24dc4b9f367ed8ab0/invoke.js"></script>
+        </div>
         <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links - 75 SHIB each)</button>
         <div class="group-content" id="group1"></div>
 
+        <div class="sponsor-box">
+            <script>
+              atOptions = { 'key' : '85dc5000b91ad022af02984ae9d36de7', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/85dc5000b91ad022af02984ae9d36de7/invoke.js"></script>
+        </div>
         <button class="group-btn" onclick="toggleGroup('group2', this)">Task Group 2 (20 Links - 75 SHIB each)</button>
         <div class="group-content" id="group2"></div>
-    </div>
+
+        <div class="sponsor-box" style="margin-bottom: 0;">
+            <script>
+              atOptions = { 'key' : 'b688e836df38a052e2c1ead436fa659d', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+            </script>
+            <script src="https://www.highperformanceformat.com/b688e836df38a052e2c1ead436fa659d/invoke.js"></script>
+        </div>
+        </div>
 
     <div id="successModal" class="modal">
         <div class="modal-content">
@@ -167,8 +179,16 @@
     <div id="withdrawModal" class="modal">
         <div class="modal-content" style="text-align: left;">
             <h3 style="text-align: center;">Withdraw Funds</h3>
-            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Minimum withdrawal is 335,000 SHIB</p>
-            <div class="form-group"><label>Payment Method</label><select id="withdrawMethod"><option value="Binance">Binance</option><option value="BEP20">BEP20 Address</option></select></div>
+            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Minimum withdrawal is 167,500 SHIB (~$5.00)</p>
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select id="withdrawMethod">
+                    <option value="Binance">Binance ( 24/7 )</option>
+                    <option value="KuCoin">KuCoin ( 24 to hours )</option>
+                    <option value="Bybit">Bybit ( 24 to 36 hors )</option>
+                    <option value="MEXC Global">MEXC Global (48 hours)</option>
+                </select>
+            </div>
             <div class="form-group"><label>Wallet Address</label><input type="text" id="withdrawAddress" placeholder="Enter ID or Address" required></div>
             <div class="modal-buttons"><button class="btn-submit" onclick="submitWithdraw()">Submit</button><button class="btn-cancel" onclick="closeWithdrawModal()">Cancel</button></div>
         </div>
@@ -178,23 +198,45 @@
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
 
-        // ================= FETCH TELEGRAM USER DATA =================
+        // ================= FETCH TELEGRAM USER & REFERRAL LOGIC =================
         const tgUser = tg.initDataUnsafe?.user;
+        
+        // আপনার টেলিগ্রাম বট এর ইউজারনেম এখানে দিতে হবে (যেমন: ShibaEarnBot)
+        const BOT_USERNAME = "YourTelegramBotUsername"; 
+        let userRefLink = "https://t.me/" + BOT_USERNAME + "?start=default_ref";
+
         if (tgUser) {
-            // ইউজারের ছবি থাকলে বসাবে
             if (tgUser.photo_url) {
                 document.getElementById('user-profile-pic').src = tgUser.photo_url;
             } else {
-                // ছবি না থাকলে নামের প্রথম অক্ষর দেখাবে
                 document.getElementById('user-profile-pic').src = `https://ui-avatars.com/api/?name=${tgUser.first_name}&background=f6d365&color=fff&size=85`;
             }
-            // ইউজারের নাম বসাবে
+            
             const fullName = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
             document.getElementById('user-name').innerText = fullName;
+
+            const refId = tgUser.username ? tgUser.username : tgUser.id;
+            userRefLink = `https://t.me/${BOT_USERNAME}?start=${refId}`;
+            document.getElementById('ref-link').value = userRefLink;
         } else {
             document.getElementById('user-name').innerText = "ShibaEarn User";
         }
-        // =============================================================
+
+        function copyRefLink() {
+            const linkInput = document.getElementById("ref-link");
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); 
+            document.execCommand("copy");
+            tg.showAlert("✅ Referral link copied successfully!");
+            if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        }
+
+        function shareToTelegram() {
+            const shareText = `Join ShibaEarn Pro and earn free Crypto daily! 🚀\n\nUse my referral link to start earning:\n${userRefLink}`;
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(userRefLink)}&text=${encodeURIComponent(shareText)}`;
+            tg.openTelegramLink(telegramUrl);
+        }
+        // =========================================================================
 
         // ================= ALL AUTO IN-APP ADS =================
         if (typeof show_10712237 === 'function') { try { show_10712237({ type: 'inApp', inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false } }); } catch (e) {} }
@@ -230,6 +272,8 @@
         const COOLDOWN_TIME = 30 * 60 * 1000; 
         const BONUS_COOLDOWN_TIME = 10 * 60 * 1000; 
         const BACKGROUND_WAIT_TIME = 15000; 
+        
+        const MIN_WITHDRAW_SHIB = 167500; 
 
         let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
         let activeCheckInterval = null;
@@ -253,10 +297,14 @@
         function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
         
         function submitWithdraw() {
-            if (currentShibBalance < 335000) return tg.showAlert("Insufficient Balance!");
+            if (currentShibBalance < MIN_WITHDRAW_SHIB) {
+                return tg.showAlert(`Insufficient Balance!\nYou need at least ${MIN_WITHDRAW_SHIB.toLocaleString()} SHIB ($5.00) to withdraw.`);
+            }
             const address = document.getElementById('withdrawAddress').value;
-            if (address.trim() === "") return tg.showAlert("Please enter Address.");
-            tg.showAlert(`Success! Processing withdrawal.`);
+            const method = document.getElementById('withdrawMethod').value;
+            if (address.trim() === "") return tg.showAlert("Please enter your ID or Address.");
+            
+            tg.showAlert(`Success!\nWithdrawal of ${currentShibBalance.toLocaleString()} SHIB via ${method} is processing.`);
             currentShibBalance = 0; localStorage.setItem('shib_balance', currentShibBalance); updateDisplay();
             closeWithdrawModal(); document.getElementById('withdrawAddress').value = ""; 
         }
@@ -275,13 +323,10 @@
             }
 
             let adPromise;
-            // 10712237
             if (adType === '10712237_pop') adPromise = typeof show_10712237 === 'function' ? show_10712237('pop') : Promise.reject();
             else if (adType === '10712237_int') adPromise = typeof show_10712237 === 'function' ? show_10712237() : Promise.reject();
-            // 10714987
             else if (adType === '10714987_pop') adPromise = typeof show_10714987 === 'function' ? show_10714987('pop') : Promise.reject();
             else if (adType === '10714987_int') adPromise = typeof show_10714987 === 'function' ? show_10714987() : Promise.reject();
-            // 10701142
             else if (adType === '10701142_pop') adPromise = typeof show_10701142 === 'function' ? show_10701142('pop') : Promise.reject();
             else if (adType === '10701142_int') adPromise = typeof show_10701142 === 'function' ? show_10701142() : Promise.reject();
 
@@ -373,7 +418,6 @@
                 return;
             }
 
-            // এখানে কোনো সেকেন্ড দেখানো হবে না, শুধু "অপেক্ষা করুন..." লেখা থাকবে
             if(timerSpan) {
                 timerSpan.style.display = 'inline-block';
                 timerSpan.innerText = 'অপেক্ষা করুন...'; 
