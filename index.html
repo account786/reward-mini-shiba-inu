@@ -7,6 +7,7 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
+    <script src='//libtl.com/sdk.js' data-zone='10712237' data-sdk='show_10712237'></script>
     <script src='//libtl.com/sdk.js' data-zone='10714987' data-sdk='show_10714987'></script>
     <script src='//libtl.com/sdk.js' data-zone='10701142' data-sdk='show_10701142'></script>
 
@@ -14,10 +15,11 @@
         /* Premium Background and Fonts */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); margin: 0; padding: 20px 10px; color: #333; min-height: 100vh; }
         .main-wrapper { max-width: 1200px; margin: 0 auto; background: #ffffff; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+        
+        /* App Header & Telegram Profile Design */
         .app-header { text-align: center; margin-bottom: 25px; }
-        .app-logo { width: 80px; height: 80px; margin: 0 auto; filter: drop-shadow(0 8px 15px rgba(245, 166, 35, 0.3)); animation: float 3s ease-in-out infinite; }
-        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
-        .app-title { color: #e67e22; margin: 12px 0 5px 0; font-size: 28px; font-weight: 800; }
+        .app-logo { width: 85px; height: 85px; margin: 0 auto; border-radius: 50%; object-fit: cover; border: 3px solid #f6d365; box-shadow: 0 8px 15px rgba(245, 166, 35, 0.3); }
+        .app-title { color: #e67e22; margin: 12px 0 5px 0; font-size: 24px; font-weight: 800; }
         .app-subtitle { color: #64748b; margin: 0; font-size: 14px; font-weight: 500; }
 
         /* Balance Card Design */
@@ -53,19 +55,18 @@
         .group-btn.active::after { transform: rotate(-180deg); }
         
         /* Bonus Buttons */
-        .bonus-btn { text-align: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); flex-direction: column; align-items: center; }
-        .bonus-btn-1 { background-color: #2ecc71; }
-        .bonus-btn-1:hover:not(:disabled) { background-color: #27ae60; }
-        .bonus-btn-2 { background-color: #9b59b6; }
-        .bonus-btn-2:hover:not(:disabled) { background-color: #8e44ad; }
-        .bonus-btn-3 { background-color: #e74c3c; margin-top: 10px; }
-        .bonus-btn-3:hover:not(:disabled) { background-color: #c0392b; }
-        .bonus-btn-4 { background-color: #34495e; margin-bottom: 25px; }
-        .bonus-btn-4:hover:not(:disabled) { background-color: #2c3e50; }
-        .bonus-btn::after { content: none; }
-        .bonus-btn:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        .bonus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .bonus-btn { text-align: center; justify-content: center; padding: 12px 5px; font-size: 13px; border-radius: 8px; color: white; font-weight: bold; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: 0.3s; }
+        .bonus-btn:disabled { background: #cbd5e1 !important; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        .b-color-1 { background-color: #2ecc71; } .b-color-1:hover:not(:disabled) { background-color: #27ae60; }
+        .b-color-2 { background-color: #9b59b6; } .b-color-2:hover:not(:disabled) { background-color: #8e44ad; }
+        .b-color-3 { background-color: #e74c3c; } .b-color-3:hover:not(:disabled) { background-color: #c0392b; }
+        .b-color-4 { background-color: #34495e; } .b-color-4:hover:not(:disabled) { background-color: #2c3e50; }
+        .b-color-5 { background-color: #f1c40f; color: #333; } .b-color-5:hover:not(:disabled) { background-color: #f39c12; }
+        .b-color-6 { background-color: #1abc9c; } .b-color-6:hover:not(:disabled) { background-color: #16a085; }
         
-        .bonus-timer-text { font-size: 13px; font-weight: normal; margin-top: 5px; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 4px; display: inline-block; }
+        .bonus-timer-text { font-size: 11px; font-weight: normal; margin-top: 5px; background: rgba(255,255,255,0.3); padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .b-color-5 .bonus-timer-text { background: rgba(0,0,0,0.1); }
         .bonus-btn:disabled .bonus-timer-text { background: rgba(255, 255, 255, 0.7); color: #dc2626; font-weight: bold; }
 
         /* Links Grid */
@@ -78,19 +79,18 @@
 
         @media (min-width: 768px) { .group-content { grid-template-columns: repeat(5, 1fr); gap: 15px; } .ad-btn { font-size: 15px; min-height: 75px; } }
 
+        /* Sponsor Banner Area */
+        .sponsor-area { text-align: center; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
+        .sponsor-box { margin-bottom: 15px; }
+
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
         <div class="app-header">
-            <svg class="app-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" fill="url(#paint0_linear)" />
-                <path d="M50 15L80 35V65L50 85L20 65V35L50 15Z" fill="#fff" opacity="0.2"/>
-                <text x="50" y="65" font-family="Arial" font-size="45" font-weight="bold" fill="#fff" text-anchor="middle">S</text>
-                <defs><linearGradient id="paint0_linear" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs>
-            </svg>
-            <h1 class="app-title">ShibaEarn Pro</h1>
+            <img id="user-profile-pic" class="app-logo" src="https://via.placeholder.com/85?text=User" alt="Profile Picture">
+            <h1 id="user-name" class="app-title">Loading...</h1>
             <p class="app-subtitle">Complete Tasks & Collect SHIB</p>
         </div>
 
@@ -101,18 +101,47 @@
             <button class="withdraw-btn" onclick="openWithdrawModal()">Withdraw Crypto</button>
         </div>
 
-        <button id="bonus-btn-1" class="group-btn bonus-btn bonus-btn-1" onclick="processBonusAd('bonus-btn-1', 25, 'old_pop', 'cd_bonus_1')">
-            🎁 Watch Popup Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-1" style="display:none;"></span>
-        </button>
-        <button id="bonus-btn-2" class="group-btn bonus-btn bonus-btn-2" onclick="processBonusAd('bonus-btn-2', 25, 'old_int', 'cd_bonus_2')">
-            📺 Watch Video Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-2" style="display:none;"></span>
-        </button>
-        <button id="bonus-btn-3" class="group-btn bonus-btn bonus-btn-3" onclick="processBonusAd('bonus-btn-3', 25, 'new_pop', 'cd_bonus_3')">
-            🔥 Extra Popup Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-3" style="display:none;"></span>
-        </button>
-        <button id="bonus-btn-4" class="group-btn bonus-btn bonus-btn-4" onclick="processBonusAd('bonus-btn-4', 25, 'new_int', 'cd_bonus_4')">
-            ⚡ Extra Video Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-4" style="display:none;"></span>
-        </button>
+        <h3 style="text-align: center; color: #555; font-size: 16px; margin-bottom: 10px;">🌟 Sponsors</h3>
+        <div class="sponsor-area">
+            
+            <div class="sponsor-box">
+                <script>
+                  atOptions = { 'key' : 'db4bc868d59bcc0f2a246aeba88d9042', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script src="https://www.highperformanceformat.com/db4bc868d59bcc0f2a246aeba88d9042/invoke.js"></script>
+            </div>
+
+            <div class="sponsor-box">
+                <script>
+                  atOptions = { 'key' : '3133e6f82f5691b24dc4b9f367ed8ab0', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script src="https://www.highperformanceformat.com/3133e6f82f5691b24dc4b9f367ed8ab0/invoke.js"></script>
+            </div>
+
+            <div class="sponsor-box">
+                <script>
+                  atOptions = { 'key' : '85dc5000b91ad022af02984ae9d36de7', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script src="https://www.highperformanceformat.com/85dc5000b91ad022af02984ae9d36de7/invoke.js"></script>
+            </div>
+
+            <div class="sponsor-box">
+                <script>
+                  atOptions = { 'key' : 'b688e836df38a052e2c1ead436fa659d', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+                </script>
+                <script src="https://www.highperformanceformat.com/b688e836df38a052e2c1ead436fa659d/invoke.js"></script>
+            </div>
+
+        </div>
+        <h3 style="text-align: center; color: #555; font-size: 16px; margin-bottom: 10px;">🎁 Bonus Reward Ads</h3>
+        <div class="bonus-grid">
+            <button id="bonus-btn-1" class="bonus-btn b-color-1" onclick="processBonusAd('bonus-btn-1', 25, '10712237_pop', 'cd_bonus_1')">Ad 1 (Pop) <span class="bonus-timer-text" id="timer-bonus-btn-1" style="display:none;"></span></button>
+            <button id="bonus-btn-2" class="bonus-btn b-color-2" onclick="processBonusAd('bonus-btn-2', 25, '10712237_int', 'cd_bonus_2')">Ad 2 (Video) <span class="bonus-timer-text" id="timer-bonus-btn-2" style="display:none;"></span></button>
+            <button id="bonus-btn-3" class="bonus-btn b-color-3" onclick="processBonusAd('bonus-btn-3', 25, '10714987_pop', 'cd_bonus_3')">Ad 3 (Pop) <span class="bonus-timer-text" id="timer-bonus-btn-3" style="display:none;"></span></button>
+            <button id="bonus-btn-4" class="bonus-btn b-color-4" onclick="processBonusAd('bonus-btn-4', 25, '10714987_int', 'cd_bonus_4')">Ad 4 (Video) <span class="bonus-timer-text" id="timer-bonus-btn-4" style="display:none;"></span></button>
+            <button id="bonus-btn-5" class="bonus-btn b-color-5" onclick="processBonusAd('bonus-btn-5', 25, '10701142_pop', 'cd_bonus_5')">Ad 5 (Pop) <span class="bonus-timer-text" id="timer-bonus-btn-5" style="display:none;"></span></button>
+            <button id="bonus-btn-6" class="bonus-btn b-color-6" onclick="processBonusAd('bonus-btn-6', 25, '10701142_int', 'cd_bonus_6')">Ad 6 (Video) <span class="bonus-timer-text" id="timer-bonus-btn-6" style="display:none;"></span></button>
+        </div>
 
         <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links - 75 SHIB each)</button>
         <div class="group-content" id="group1"></div>
@@ -149,13 +178,28 @@
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
 
-        // অটোমেটিক ইন-অ্যাপ অ্যাড
-        if (typeof show_10714987 === 'function') {
-            try { show_10714987({ type: 'inApp', inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false } }); } catch (e) {}
+        // ================= FETCH TELEGRAM USER DATA =================
+        const tgUser = tg.initDataUnsafe?.user;
+        if (tgUser) {
+            // ইউজারের ছবি থাকলে বসাবে
+            if (tgUser.photo_url) {
+                document.getElementById('user-profile-pic').src = tgUser.photo_url;
+            } else {
+                // ছবি না থাকলে নামের প্রথম অক্ষর দেখাবে
+                document.getElementById('user-profile-pic').src = `https://ui-avatars.com/api/?name=${tgUser.first_name}&background=f6d365&color=fff&size=85`;
+            }
+            // ইউজারের নাম বসাবে
+            const fullName = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
+            document.getElementById('user-name').innerText = fullName;
+        } else {
+            document.getElementById('user-name').innerText = "ShibaEarn User";
         }
-        if (typeof show_10701142 === 'function') {
-            try { show_10701142({ type: 'inApp', inAppSettings: { frequency: 60, capping: 1, interval: 60, timeout: 5, everyPage: true } }); } catch (e) {}
-        }
+        // =============================================================
+
+        // ================= ALL AUTO IN-APP ADS =================
+        if (typeof show_10712237 === 'function') { try { show_10712237({ type: 'inApp', inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false } }); } catch (e) {} }
+        if (typeof show_10714987 === 'function') { try { show_10714987({ type: 'inApp', inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 4, everyPage: false } }); } catch (e) {} }
+        if (typeof show_10701142 === 'function') { try { show_10701142({ type: 'inApp', inAppSettings: { frequency: 10, capping: 1, interval: 30, timeout: 5, everyPage: true } }); } catch (e) {} }
 
         const group1Links = [
             "https://www.effectivegatecpm.com/kyi071pib?key=f97ab34f903ea845e2d6e024b4eb4802", "https://www.effectivegatecpm.com/h5i0v8cj?key=b84cdb24e61ca63ce399c60aed1494cb",
@@ -183,8 +227,8 @@
 
         const SHIB_PER_CLICK = 75;
         const SHIB_TO_USD_RATE = 0.00003; 
-        const COOLDOWN_TIME = 30 * 60 * 1000; // লিংকের জন্য ৩০ মিনিট
-        const BONUS_COOLDOWN_TIME = 10 * 60 * 1000; // ভিডিও অ্যাডের জন্য ১০ মিনিট
+        const COOLDOWN_TIME = 30 * 60 * 1000; 
+        const BONUS_COOLDOWN_TIME = 10 * 60 * 1000; 
         const BACKGROUND_WAIT_TIME = 15000; 
 
         let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
@@ -222,9 +266,8 @@
             return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
         }
 
-        // ================= BONUS BUTTON LOGIC (10 Mins Cooldown) =================
+        // ================= MULTI BONUS LOGIC =================
         function processBonusAd(buttonId, rewardAmount, adType, storageKey) {
-            const btn = document.getElementById(buttonId);
             const savedTime = localStorage.getItem(storageKey);
             if (savedTime && Date.now() < savedTime) {
                 tg.showAlert("Please wait for the timer to finish!");
@@ -232,10 +275,15 @@
             }
 
             let adPromise;
-            if (adType === 'old_pop') adPromise = typeof show_10714987 === 'function' ? show_10714987('pop') : Promise.reject();
-            else if (adType === 'old_int') adPromise = typeof show_10714987 === 'function' ? show_10714987() : Promise.reject();
-            else if (adType === 'new_pop') adPromise = typeof show_10701142 === 'function' ? show_10701142('pop') : Promise.reject();
-            else if (adType === 'new_int') adPromise = typeof show_10701142 === 'function' ? show_10701142() : Promise.reject();
+            // 10712237
+            if (adType === '10712237_pop') adPromise = typeof show_10712237 === 'function' ? show_10712237('pop') : Promise.reject();
+            else if (adType === '10712237_int') adPromise = typeof show_10712237 === 'function' ? show_10712237() : Promise.reject();
+            // 10714987
+            else if (adType === '10714987_pop') adPromise = typeof show_10714987 === 'function' ? show_10714987('pop') : Promise.reject();
+            else if (adType === '10714987_int') adPromise = typeof show_10714987 === 'function' ? show_10714987() : Promise.reject();
+            // 10701142
+            else if (adType === '10701142_pop') adPromise = typeof show_10701142 === 'function' ? show_10701142('pop') : Promise.reject();
+            else if (adType === '10701142_int') adPromise = typeof show_10701142 === 'function' ? show_10701142() : Promise.reject();
 
             adPromise.then(() => {
                 currentShibBalance += rewardAmount;
@@ -274,7 +322,7 @@
             else { button.disabled = false; if(timerSpan) timerSpan.style.display = 'none'; }
         }
 
-        ['cd_bonus_1', 'cd_bonus_2', 'cd_bonus_3', 'cd_bonus_4'].forEach((key, index) => {
+        ['cd_bonus_1', 'cd_bonus_2', 'cd_bonus_3', 'cd_bonus_4', 'cd_bonus_5', 'cd_bonus_6'].forEach((key, index) => {
             const savedTime = localStorage.getItem(key);
             if (savedTime && Date.now() < savedTime) {
                 startBonusTimer(`bonus-btn-${index+1}`, savedTime, key);
@@ -282,10 +330,8 @@
                 localStorage.removeItem(key);
             }
         });
-        // ==============================================================================
 
-
-        // ================= BACKGROUND TIMER LOGIC FOR LINKS (30 Mins Cooldown) =================
+        // ================= BACKGROUND TIMER WITHOUT COUNTDOWN =================
         function processTask(link, buttonId, uniqueId, storageKey) {
             if (localStorage.getItem('pending_task')) {
                 tg.showAlert("Please wait, a task is already processing!");
@@ -327,16 +373,16 @@
                 return;
             }
 
-            if(timerSpan) timerSpan.style.display = 'inline-block';
+            // এখানে কোনো সেকেন্ড দেখানো হবে না, শুধু "অপেক্ষা করুন..." লেখা থাকবে
+            if(timerSpan) {
+                timerSpan.style.display = 'inline-block';
+                timerSpan.innerText = 'অপেক্ষা করুন...'; 
+            }
             if (activeCheckInterval) clearInterval(activeCheckInterval);
 
             activeCheckInterval = setInterval(() => {
                 const now = Date.now();
-                const timeLeft = Math.ceil((pending.targetTime - now) / 1000);
-
-                if (timeLeft > 0) {
-                    if(timerSpan) timerSpan.innerText = `অপেক্ষা: ${timeLeft}s`;
-                } else {
+                if (now >= pending.targetTime) {
                     clearInterval(activeCheckInterval);
                     if(timerSpan) { timerSpan.style.display = 'none'; timerSpan.innerText = ""; }
                     localStorage.removeItem('pending_task');
