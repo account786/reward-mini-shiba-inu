@@ -6,7 +6,9 @@
     <title>ShibaEarn Pro - Complete Tasks & Earn Crypto</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <script src='//libtl.com/sdk.js' data-zone='10714987' data-sdk='show_10714987'></script>
+    <script src='//libtl.com/sdk.js' data-zone='10701142' data-sdk='show_10701142'></script>
 
     <style>
         /* Premium Background and Fonts */
@@ -51,12 +53,20 @@
         .group-btn.active::after { transform: rotate(-180deg); }
         
         /* Bonus Buttons */
-        .bonus-btn { text-align: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+        .bonus-btn { text-align: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); flex-direction: column; align-items: center; }
         .bonus-btn-1 { background-color: #2ecc71; }
-        .bonus-btn-1:hover { background-color: #27ae60; }
-        .bonus-btn-2 { background-color: #9b59b6; margin-bottom: 25px; }
-        .bonus-btn-2:hover { background-color: #8e44ad; }
+        .bonus-btn-1:hover:not(:disabled) { background-color: #27ae60; }
+        .bonus-btn-2 { background-color: #9b59b6; }
+        .bonus-btn-2:hover:not(:disabled) { background-color: #8e44ad; }
+        .bonus-btn-3 { background-color: #e74c3c; margin-top: 10px; }
+        .bonus-btn-3:hover:not(:disabled) { background-color: #c0392b; }
+        .bonus-btn-4 { background-color: #34495e; margin-bottom: 25px; }
+        .bonus-btn-4:hover:not(:disabled) { background-color: #2c3e50; }
         .bonus-btn::after { content: none; }
+        .bonus-btn:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        
+        .bonus-timer-text { font-size: 13px; font-weight: normal; margin-top: 5px; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 4px; display: inline-block; }
+        .bonus-btn:disabled .bonus-timer-text { background: rgba(255, 255, 255, 0.7); color: #dc2626; font-weight: bold; }
 
         /* Links Grid */
         .group-content { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px 0 25px 0; }
@@ -87,22 +97,27 @@
         <div class="balance-card">
             <h2><span id="user-balance-shib">0</span> SHIB</h2>
             <div class="balance-usd">≈ $<span id="user-balance-usd">0.0000</span> USD</div>
-            <p>Earn +25 SHIB per task! (Min. Withdrawal: 335,000 SHIB / ~$10.00)</p>
+            <p>Earn +75 SHIB per task! (Min. Withdrawal: 335,000 SHIB / ~$10.00)</p>
             <button class="withdraw-btn" onclick="openWithdrawModal()">Withdraw Crypto</button>
         </div>
 
-        <button class="group-btn bonus-btn bonus-btn-1" onclick="showRewardedPopup()">
-            🎁 Watch Popup Ad & Earn (+100 SHIB)
+        <button id="bonus-btn-1" class="group-btn bonus-btn bonus-btn-1" onclick="processBonusAd('bonus-btn-1', 25, 'old_pop', 'cd_bonus_1')">
+            🎁 Watch Popup Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-1" style="display:none;"></span>
         </button>
-        
-        <button class="group-btn bonus-btn bonus-btn-2" onclick="showRewardedInterstitial()">
-            📺 Watch Video Ad & Earn (+150 SHIB)
+        <button id="bonus-btn-2" class="group-btn bonus-btn bonus-btn-2" onclick="processBonusAd('bonus-btn-2', 25, 'old_int', 'cd_bonus_2')">
+            📺 Watch Video Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-2" style="display:none;"></span>
+        </button>
+        <button id="bonus-btn-3" class="group-btn bonus-btn bonus-btn-3" onclick="processBonusAd('bonus-btn-3', 25, 'new_pop', 'cd_bonus_3')">
+            🔥 Extra Popup Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-3" style="display:none;"></span>
+        </button>
+        <button id="bonus-btn-4" class="group-btn bonus-btn bonus-btn-4" onclick="processBonusAd('bonus-btn-4', 25, 'new_int', 'cd_bonus_4')">
+            ⚡ Extra Video Ad (+25 SHIB) <span class="bonus-timer-text" id="timer-bonus-btn-4" style="display:none;"></span>
         </button>
 
-        <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links)</button>
+        <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links - 75 SHIB each)</button>
         <div class="group-content" id="group1"></div>
 
-        <button class="group-btn" onclick="toggleGroup('group2', this)">Task Group 2 (20 Links)</button>
+        <button class="group-btn" onclick="toggleGroup('group2', this)">Task Group 2 (20 Links - 75 SHIB each)</button>
         <div class="group-content" id="group2"></div>
     </div>
 
@@ -112,7 +127,7 @@
             <h3 style="color: #2ecc71;">Task Successful!</h3>
             <p style="color: #666; font-size: 14px;">You have successfully completed the task.</p>
             <div class="stats-box">
-                <p>Reward Earned: <strong id="dynamic-reward">+25 SHIB</strong></p>
+                <p>Reward Earned: <strong id="dynamic-reward">+75 SHIB</strong></p>
                 <p>Total Balance: <strong id="popup-total-shib">0</strong> SHIB</p>
                 <p>Converted Value: <strong style="color:#27ae60;">$<span id="popup-total-usd">0.0000</span> USD</strong></p>
             </div>
@@ -136,12 +151,10 @@
 
         // অটোমেটিক ইন-অ্যাপ অ্যাড
         if (typeof show_10714987 === 'function') {
-            try { 
-                show_10714987({ 
-                    type: 'inApp', 
-                    inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false }
-                }); 
-            } catch (e) {}
+            try { show_10714987({ type: 'inApp', inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false } }); } catch (e) {}
+        }
+        if (typeof show_10701142 === 'function') {
+            try { show_10701142({ type: 'inApp', inAppSettings: { frequency: 60, capping: 1, interval: 60, timeout: 5, everyPage: true } }); } catch (e) {}
         }
 
         const group1Links = [
@@ -168,15 +181,15 @@
             "https://omg10.com/4/10711259", "https://omg10.com/4/10711252", "https://omg10.com/4/10711245", "https://omg10.com/4/10711250"
         ];
 
-        const SHIB_PER_CLICK = 25;
+        const SHIB_PER_CLICK = 75;
         const SHIB_TO_USD_RATE = 0.00003; 
-        const COOLDOWN_TIME = 30 * 60 * 1000; // ৩০ মিনিট
-        const BACKGROUND_WAIT_TIME = 15000; // ১৫ সেকেন্ড
+        const COOLDOWN_TIME = 30 * 60 * 1000; // লিংকের জন্য ৩০ মিনিট
+        const BONUS_COOLDOWN_TIME = 10 * 60 * 1000; // ভিডিও অ্যাডের জন্য ১০ মিনিট
+        const BACKGROUND_WAIT_TIME = 15000; 
 
         let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
-        let activeCheckInterval = null; // ব্যাকগ্রাউন্ড টাইমার ট্র্যাকার
+        let activeCheckInterval = null;
 
-        // ব্যালেন্স আপডেট ও শো করার ফাংশন
         function updateDisplay() {
             const usdValue = currentShibBalance * SHIB_TO_USD_RATE;
             document.getElementById('user-balance-shib').innerText = currentShibBalance.toLocaleString();
@@ -196,7 +209,7 @@
         function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
         
         function submitWithdraw() {
-            if (currentShibBalance < MIN_WITHDRAW_SHIB) return tg.showAlert("Insufficient Balance!");
+            if (currentShibBalance < 335000) return tg.showAlert("Insufficient Balance!");
             const address = document.getElementById('withdrawAddress').value;
             if (address.trim() === "") return tg.showAlert("Please enter Address.");
             tg.showAlert(`Success! Processing withdrawal.`);
@@ -204,28 +217,76 @@
             closeWithdrawModal(); document.getElementById('withdrawAddress').value = ""; 
         }
 
-        // বোনাস অ্যাড
-        function showRewardedPopup() {
-            if (typeof show_10714987 === 'function') {
-                show_10714987('pop').then(() => {
-                    currentShibBalance += 100; localStorage.setItem('shib_balance', currentShibBalance);
-                    updateDisplay(); showSuccessModal(100);
-                }).catch(e => tg.showAlert('Ad error or not ready. Try again in a moment.'));
-            } else tg.showAlert('Ads are loading, please wait...');
+        function formatTime(secondsLeft) {
+            const m = Math.floor(secondsLeft / 60); const s = secondsLeft % 60;
+            return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
         }
 
-        function showRewardedInterstitial() {
-            if (typeof show_10714987 === 'function') {
-                show_10714987().then(() => {
-                    currentShibBalance += 150; localStorage.setItem('shib_balance', currentShibBalance);
-                    updateDisplay(); showSuccessModal(150);
-                }).catch(e => tg.showAlert('Ad error or not ready. Try again in a moment.'));
-            } else tg.showAlert('Ads are loading, please wait...');
+        // ================= BONUS BUTTON LOGIC (10 Mins Cooldown) =================
+        function processBonusAd(buttonId, rewardAmount, adType, storageKey) {
+            const btn = document.getElementById(buttonId);
+            const savedTime = localStorage.getItem(storageKey);
+            if (savedTime && Date.now() < savedTime) {
+                tg.showAlert("Please wait for the timer to finish!");
+                return;
+            }
+
+            let adPromise;
+            if (adType === 'old_pop') adPromise = typeof show_10714987 === 'function' ? show_10714987('pop') : Promise.reject();
+            else if (adType === 'old_int') adPromise = typeof show_10714987 === 'function' ? show_10714987() : Promise.reject();
+            else if (adType === 'new_pop') adPromise = typeof show_10701142 === 'function' ? show_10701142('pop') : Promise.reject();
+            else if (adType === 'new_int') adPromise = typeof show_10701142 === 'function' ? show_10701142() : Promise.reject();
+
+            adPromise.then(() => {
+                currentShibBalance += rewardAmount;
+                localStorage.setItem('shib_balance', currentShibBalance);
+                updateDisplay();
+                showSuccessModal(rewardAmount);
+
+                const endTime = Date.now() + BONUS_COOLDOWN_TIME;
+                localStorage.setItem(storageKey, endTime);
+                startBonusTimer(buttonId, endTime, storageKey);
+            }).catch(e => {
+                tg.showAlert('Ad error or not ready. Try again in a moment.');
+            });
         }
 
-        // ================= NEW: STRICT BACKGROUND TIMER LOGIC =================
+        function startBonusTimer(buttonId, endTime, storageKey) {
+            const button = document.getElementById(buttonId);
+            const timerSpan = document.getElementById(`timer-${buttonId}`);
+            button.disabled = true;
+            if(timerSpan) timerSpan.style.display = 'inline-block';
+
+            const updateInterval = setInterval(() => {
+                const timeLeft = Math.ceil((endTime - Date.now()) / 1000);
+                if (timeLeft > 0) {
+                    if(timerSpan) timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`;
+                } else {
+                    clearInterval(updateInterval);
+                    button.disabled = false;
+                    if(timerSpan) { timerSpan.style.display = 'none'; timerSpan.innerText = ""; }
+                    localStorage.removeItem(storageKey);
+                }
+            }, 1000);
+
+            const initialTimeLeft = Math.ceil((endTime - Date.now()) / 1000);
+            if(initialTimeLeft > 0 && timerSpan) timerSpan.innerText = `Wait: ${formatTime(initialTimeLeft)}`;
+            else { button.disabled = false; if(timerSpan) timerSpan.style.display = 'none'; }
+        }
+
+        ['cd_bonus_1', 'cd_bonus_2', 'cd_bonus_3', 'cd_bonus_4'].forEach((key, index) => {
+            const savedTime = localStorage.getItem(key);
+            if (savedTime && Date.now() < savedTime) {
+                startBonusTimer(`bonus-btn-${index+1}`, savedTime, key);
+            } else {
+                localStorage.removeItem(key);
+            }
+        });
+        // ==============================================================================
+
+
+        // ================= BACKGROUND TIMER LOGIC FOR LINKS (30 Mins Cooldown) =================
         function processTask(link, buttonId, uniqueId, storageKey) {
-            // ১. একটি টাস্ক চলাকালীন অন্যটিতে ক্লিক বন্ধ রাখা
             if (localStorage.getItem('pending_task')) {
                 tg.showAlert("Please wait, a task is already processing!");
                 return;
@@ -233,14 +294,12 @@
 
             const button = document.getElementById(buttonId);
             
-            // ২. লিংক ওপেন
             if(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
                 window.Telegram.WebApp.openLink(link);
             } else {
                 window.open(link, '_blank');
             }
 
-            // ৩. ১৫ সেকেন্ডের টার্গেট টাইম সেভ করা (যাতে ব্রাউজার পজ করলেও সমস্যা না হয়)
             const targetTime = Date.now() + BACKGROUND_WAIT_TIME;
             
             localStorage.setItem('pending_task', JSON.stringify({
@@ -252,14 +311,12 @@
             }));
 
             button.disabled = true;
-            
-            // ৪. ট্র্যাকিং শুরু
             checkPendingTask(); 
         }
 
         function checkPendingTask() {
             const pendingStr = localStorage.getItem('pending_task');
-            if (!pendingStr) return; // কোনো কাজ পেন্ডিং না থাকলে রিটার্ন করবে
+            if (!pendingStr) return; 
 
             const pending = JSON.parse(pendingStr);
             const button = document.getElementById(pending.buttonId);
@@ -273,7 +330,6 @@
             if(timerSpan) timerSpan.style.display = 'inline-block';
             if (activeCheckInterval) clearInterval(activeCheckInterval);
 
-            // স্মার্ট টাইমার যা লোকাল স্টোরেজ থেকে সময় হিসাব করবে
             activeCheckInterval = setInterval(() => {
                 const now = Date.now();
                 const timeLeft = Math.ceil((pending.targetTime - now) / 1000);
@@ -281,25 +337,16 @@
                 if (timeLeft > 0) {
                     if(timerSpan) timerSpan.innerText = `অপেক্ষা: ${timeLeft}s`;
                 } else {
-                    // ১৫ সেকেন্ড পার হয়ে গেছে!
                     clearInterval(activeCheckInterval);
-                    if(timerSpan) {
-                        timerSpan.style.display = 'none';
-                        timerSpan.innerText = "";
-                    }
-                    
-                    // পেন্ডিং টাস্ক রিমুভ করা
+                    if(timerSpan) { timerSpan.style.display = 'none'; timerSpan.innerText = ""; }
                     localStorage.removeItem('pending_task');
 
-                    // ব্যালেন্স যোগ করা
                     currentShibBalance += pending.reward;
                     localStorage.setItem('shib_balance', currentShibBalance);
                     updateDisplay();
                     
-                    // সাকসেস নোটিফিকেশন শো করা (ইউজার যখন অ্যাপে ফিরবে তখন এটি সরাসরি স্ক্রিনে ভেসে উঠবে)
                     showSuccessModal(pending.reward);
 
-                    // ৩০ মিনিটের কুলডাউন (Wait) শুরু করা
                     const endTime = Date.now() + COOLDOWN_TIME;
                     localStorage.setItem(pending.storageKey, endTime);
                     startButtonTimer(button, pending.uniqueId, endTime, pending.storageKey);
@@ -307,12 +354,8 @@
             }, 1000);
         }
 
-        // ইউজার অ্যাড দেখে অন্য ট্যাব/অ্যাপ থেকে ফিরে এলে যেন তৎক্ষণাৎ ব্যালেন্স আপডেট হয়
         window.addEventListener('focus', checkPendingTask);
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') checkPendingTask();
-        });
-        // ======================================================================
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkPendingTask(); });
 
         function createButtons(linksArray, containerId, groupIdPrefix) {
             const container = document.getElementById(containerId);
@@ -326,37 +369,24 @@
                 button.id = buttonId;
                 button.innerHTML = `Task ${index + 1} <span class="timer-text" id="timer-${uniqueId}" style="display:none;"></span>`;
                 
-                button.onclick = function() {
-                    processTask(link, buttonId, uniqueId, storageKey);
-                };
-                
+                button.onclick = function() { processTask(link, buttonId, uniqueId, storageKey); };
                 container.appendChild(button);
 
-                // আগে থেকে কুলডাউন (৩০ মিনিট) থাকলে সেটি চেক করা
                 const savedEndTime = localStorage.getItem(storageKey);
-                if (savedEndTime && Date.now() < savedEndTime) {
-                    startButtonTimer(button, uniqueId, savedEndTime, storageKey);
-                } else {
-                    localStorage.removeItem(storageKey);
-                }
+                if (savedEndTime && Date.now() < savedEndTime) startButtonTimer(button, uniqueId, savedEndTime, storageKey);
+                else localStorage.removeItem(storageKey);
             });
         }
 
         createButtons(group1Links, 'group1', 'g1');
         createButtons(group2Links, 'group2', 'g2');
 
-        // পেজ রিলোড দেওয়ার পরেও যদি কোনো কাজ ১৫ সেকেন্ডের পেন্ডিং অবস্থায় থাকে, সেটি চেক করবে
         checkPendingTask();
 
         function toggleGroup(groupId, btnElement) {
             const content = document.getElementById(groupId);
             if (content.style.display === "grid") { content.style.display = "none"; btnElement.classList.remove("active"); } 
             else { content.style.display = "grid"; btnElement.classList.add("active"); }
-        }
-
-        function formatTime(secondsLeft) {
-            const m = Math.floor(secondsLeft / 60); const s = secondsLeft % 60;
-            return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
         }
 
         function startButtonTimer(button, uniqueId, endTime, storageKey) {
@@ -366,26 +396,17 @@
             
             const updateInterval = setInterval(() => {
                 const timeLeft = Math.ceil((endTime - Date.now()) / 1000); 
-                if (timeLeft > 0) { 
-                    if(timerSpan) timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`; 
-                } else {
-                    clearInterval(updateInterval); 
-                    button.disabled = false;
-                    if(timerSpan) {
-                        timerSpan.style.display = 'none'; 
-                        timerSpan.innerText = "";
-                    }
+                if (timeLeft > 0) { if(timerSpan) timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`; } 
+                else {
+                    clearInterval(updateInterval); button.disabled = false;
+                    if(timerSpan) { timerSpan.style.display = 'none'; timerSpan.innerText = ""; }
                     localStorage.removeItem(storageKey);
                 }
             }, 1000);
             
             const initialTimeLeft = Math.ceil((endTime - Date.now()) / 1000);
-            if(initialTimeLeft > 0 && timerSpan) {
-                timerSpan.innerText = `Wait: ${formatTime(initialTimeLeft)}`;
-            } else {
-                button.disabled = false;
-                if(timerSpan) timerSpan.style.display = 'none';
-            }
+            if(initialTimeLeft > 0 && timerSpan) timerSpan.innerText = `Wait: ${formatTime(initialTimeLeft)}`;
+            else { button.disabled = false; if(timerSpan) timerSpan.style.display = 'none'; }
         }
     </script>
 </body>
