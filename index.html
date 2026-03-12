@@ -6,404 +6,79 @@
     <title>ShibaEarn Pro - Complete Tasks & Earn Crypto</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src='//libtl.com/sdk.js' data-zone='10712237' data-sdk='show_10712237'></script>
+    <script src='//libtl.com/sdk.js' data-zone='10714987' data-sdk='show_10714987'></script>
+
     <style>
         /* Premium Background and Fonts */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            margin: 0;
-            padding: 20px 10px;
-            color: #333;
-            min-height: 100vh;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); margin: 0; padding: 20px 10px; color: #333; min-height: 100vh; }
+        .main-wrapper { max-width: 1200px; margin: 0 auto; background: #ffffff; padding: 25px 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+        .app-header { text-align: center; margin-bottom: 25px; }
+        .app-logo { width: 80px; height: 80px; margin: 0 auto; filter: drop-shadow(0 8px 15px rgba(245, 166, 35, 0.3)); animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        .app-title { color: #e67e22; margin: 12px 0 5px 0; font-size: 28px; font-weight: 800; }
+        .app-subtitle { color: #64748b; margin: 0; font-size: 14px; font-weight: 500; }
 
-        .main-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 25px 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        /* App Header & Logo Design */
-        .app-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .app-logo {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto;
-            filter: drop-shadow(0 8px 15px rgba(245, 166, 35, 0.3));
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .app-title {
-            color: #e67e22;
-            margin: 12px 0 5px 0;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .app-subtitle {
-            color: #64748b;
-            margin: 0;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* Balance Card Design (Crypto Theme) */
-        .balance-card {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            color: #fff;
-            padding: 25px 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(253, 160, 133, 0.4);
-        }
-
-        .balance-card h2 {
-            margin: 0;
-            font-size: 34px;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .balance-usd {
-            background: rgba(255, 255, 255, 0.2);
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .balance-card p {
-            margin: 12px 0 18px 0;
-            font-size: 14px;
-            opacity: 0.95;
-            font-weight: 600;
-        }
+        /* Balance Card Design */
+        .balance-card { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #fff; padding: 25px 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(253, 160, 133, 0.4); }
+        .balance-card h2 { margin: 0; font-size: 34px; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .balance-usd { background: rgba(255, 255, 255, 0.2); display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; margin-top: 10px; }
+        .balance-card p { margin: 12px 0 18px 0; font-size: 14px; font-weight: 600; }
 
         /* Withdraw Button */
-        .withdraw-btn {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-        }
+        .withdraw-btn { background-color: #333; color: #fff; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease; }
+        .withdraw-btn:hover { background-color: #000; transform: scale(1.05); }
 
-        .withdraw-btn:hover {
-            background-color: #000;
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-        }
-
-        /* Modal / Popup Design */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0,0,0,0.6); 
-            backdrop-filter: blur(5px);
-            align-items: center; 
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
-
-        .modal-content h3 {
-            margin-top: 0;
-            color: #e67e22;
-            font-size: 22px;
-        }
-
-        .success-icon {
-            font-size: 50px;
-            color: #2ecc71;
-            margin-bottom: 10px;
-        }
-
-        .stats-box {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            border: 1px solid #e9ecef;
-        }
-
-        .stats-box p {
-            margin: 8px 0;
-            font-size: 15px;
-            color: #444;
-        }
-
-        .stats-box strong {
-            color: #e67e22;
-            font-size: 18px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 700;
-            color: #444;
-            font-size: 14px;
-        }
-
-        .form-group select, .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
-        }
-
-        .form-group select:focus, .form-group input:focus {
-            outline: none;
-            border-color: #e67e22;
-        }
-
-        .modal-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 25px;
-            gap: 15px;
-        }
-
-        .btn-submit {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            flex: 1;
-            font-size: 15px;
-            width: 100%;
-        }
-
-        .btn-cancel {
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            flex: 1;
-            font-size: 15px;
-        }
-
-        /* Info Box */
-        .info-box {
-            background: #fff3e0;
-            border-left: 5px solid #e67e22;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-        }
-
-        .info-box ul {
-            margin: 0;
-            padding-left: 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            list-style-type: none;
-        }
-
-        .info-box ul li {
-            background: #ffe0b2;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            color: #d35400;
-            font-weight: 700;
-        }
-
-        .info-box .footer-text {
-            margin-top: 15px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #c0392b;
-            text-align: center;
-        }
+        /* Modal Design */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #fff; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .modal-content h3 { color: #e67e22; font-size: 22px; margin-top: 0; }
+        .success-icon { font-size: 50px; color: #2ecc71; margin-bottom: 10px; }
+        .stats-box { background: #f8f9fa; border-radius: 10px; padding: 15px; margin: 15px 0; border: 1px solid #e9ecef; }
+        .stats-box p { margin: 8px 0; font-size: 15px; color: #444; }
+        .stats-box strong { color: #e67e22; font-size: 18px; }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; color: #444; font-size: 14px; }
+        .form-group select, .form-group input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+        .form-group select:focus, .form-group input:focus { outline: none; border-color: #e67e22; }
+        .modal-buttons { display: flex; justify-content: space-between; margin-top: 25px; gap: 15px; }
+        .btn-submit { background-color: #2ecc71; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 15px; }
+        .btn-cancel { background-color: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; flex: 1; font-size: 15px; }
 
         /* Accordion Buttons */
-        .group-btn {
-            background-color: #e67e22;
-            color: white;
-            cursor: pointer;
-            padding: 16px 20px;
-            width: 100%;
-            border: none;
-            text-align: left;
-            outline: none;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 10px;
-            transition: 0.3s;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2);
-        }
-
-        .group-btn:hover, .group-btn.active {
-            background-color: #d35400;
-            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.3);
-        }
-
-        .group-btn::after {
-            content: '\25BC';
-            font-size: 14px;
-            transition: transform 0.3s ease;
-        }
-
-        .group-btn.active::after {
-            transform: rotate(-180deg);
-        }
+        .group-btn { background-color: #e67e22; color: white; cursor: pointer; padding: 16px 20px; width: 100%; border: none; text-align: left; font-size: 16px; font-weight: bold; border-radius: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(230, 126, 34, 0.2); }
+        .group-btn:hover, .group-btn.active { background-color: #d35400; }
+        .group-btn::after { content: '\25BC'; font-size: 14px; transition: transform 0.3s ease; }
+        .group-btn.active::after { transform: rotate(-180deg); }
         
-        /* Bonus Button Style */
-        .bonus-btn {
-            background-color: #2ecc71;
-            text-align: center;
-            justify-content: center;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
-        }
-        .bonus-btn:hover {
-            background-color: #27ae60;
-        }
-        .bonus-btn::after {
-            content: none; /* Remove arrow for bonus button */
-        }
+        /* Bonus Buttons */
+        .bonus-btn { text-align: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+        .bonus-btn-1 { background-color: #2ecc71; }
+        .bonus-btn-1:hover { background-color: #27ae60; }
+        .bonus-btn-2 { background-color: #9b59b6; margin-bottom: 25px; }
+        .bonus-btn-2:hover { background-color: #8e44ad; }
+        .bonus-btn::after { content: none; }
 
-        /* CSS Grid for Links */
-        .group-content {
-            display: none; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            padding: 10px 0 25px 0;
-        }
+        /* Links Grid */
+        .group-content { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px 0 25px 0; }
+        .ad-btn { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: white; border: none; padding: 12px 2px; font-size: 13px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(253, 160, 133, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 65px; width: 100%; }
+        .ad-btn:hover:not(:disabled) { transform: translateY(-3px); }
+        .ad-btn:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; transform: none; }
+        .timer-text { font-size: 11px; font-weight: normal; margin-top: 5px; background: rgba(0,0,0,0.1); padding: 3px 6px; border-radius: 4px; }
+        .ad-btn:disabled .timer-text { background: rgba(255, 255, 255, 0.7); color: #dc2626; font-weight: 800; }
 
-        .ad-btn {
-            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            color: white;
-            border: none;
-            padding: 12px 2px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(253, 160, 133, 0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 65px;
-            width: 100%;
-        }
-
-        .ad-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(253, 160, 133, 0.5);
-        }
-
-        .ad-btn:disabled {
-            background: #cbd5e1;
-            color: #64748b;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .timer-text {
-            font-size: 11px;
-            font-weight: normal;
-            margin-top: 5px;
-            background: rgba(0,0,0,0.1);
-            padding: 3px 6px;
-            border-radius: 4px;
-            letter-spacing: 0.5px;
-        }
-        
-        .ad-btn:disabled .timer-text {
-            background: rgba(255, 255, 255, 0.7);
-            color: #dc2626;
-            font-weight: 800;
-        }
-
-        @media (min-width: 768px) {
-            .group-content {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 15px;
-            }
-            .ad-btn {
-                font-size: 15px;
-                min-height: 75px;
-            }
-        }
+        @media (min-width: 768px) { .group-content { grid-template-columns: repeat(5, 1fr); gap: 15px; } .ad-btn { font-size: 15px; min-height: 75px; } }
 
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
-        
         <div class="app-header">
             <svg class="app-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="45" fill="url(#paint0_linear)" />
                 <path d="M50 15L80 35V65L50 85L20 65V35L50 15Z" fill="#fff" opacity="0.2"/>
                 <text x="50" y="65" font-family="Arial" font-size="45" font-weight="bold" fill="#fff" text-anchor="middle">S</text>
-                <defs>
-                    <linearGradient id="paint0_linear" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#f6d365"/>
-                        <stop offset="1" stop-color="#fda085"/>
-                    </linearGradient>
-                </defs>
+                <defs><linearGradient id="paint0_linear" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse"><stop stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs>
             </svg>
             <h1 class="app-title">ShibaEarn Pro</h1>
             <p class="app-subtitle">Complete Tasks & Collect SHIB</p>
@@ -416,64 +91,12 @@
             <button class="withdraw-btn" onclick="openWithdrawModal()">Withdraw Crypto</button>
         </div>
 
-        <div id="successModal" class="modal">
-            <div class="modal-content">
-                <div class="success-icon">✔</div>
-                <h3 style="color: #2ecc71;">Task Successful!</h3>
-                <p style="color: #666; font-size: 14px;">You have successfully completed the task.</p>
-                
-                <div class="stats-box">
-                    <p>Reward Earned: <strong id="dynamic-reward">+25 SHIB</strong></p>
-                    <p>Total Balance: <strong id="popup-total-shib">0</strong> SHIB</p>
-                    <p>Converted Value: <strong style="color:#27ae60;">$<span id="popup-total-usd">0.0000</span> USD</strong></p>
-                </div>
-
-                <button class="btn-submit" onclick="closeSuccessModal()">Awesome! Continue</button>
-            </div>
-        </div>
-
-        <div id="withdrawModal" class="modal">
-            <div class="modal-content" style="text-align: left;">
-                <h3 style="text-align: center;">Withdraw Funds</h3>
-                <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Minimum withdrawal is 335,000 SHIB (~$10.00)</p>
-                
-                <div class="form-group">
-                    <label for="withdrawMethod">Payment Method</label>
-                    <select id="withdrawMethod">
-                        <option value="Binance">Binance (Pay ID / Email)</option>
-                        <option value="BEP20">USDT / SHIB (BEP20 Address)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="withdrawAddress">Wallet Address / Binance Details</label>
-                    <input type="text" id="withdrawAddress" placeholder="Enter your ID or Address here" required>
-                </div>
-
-                <div class="modal-buttons">
-                    <button class="btn-submit" style="width:auto;" onclick="submitWithdraw()">Submit</button>
-                    <button class="btn-cancel" onclick="closeWithdrawModal()">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="info-box">
-            <ul>
-                <li>United States (USA)</li>
-                <li>United Kingdom (UK)</li>
-                <li>Canada</li>
-                <li>Australia</li>
-                <li>New Zealand</li>
-                <li>Germany</li>
-                <li>France</li>
-            </ul>
-            <div class="footer-text">
-                Targeted Premium Countries for maximum rewards!
-            </div>
-        </div>
-
-        <button class="group-btn bonus-btn" onclick="showBonusAd()">
-            📺 Watch Video & Earn Bonus (+100 SHIB)
+        <button class="group-btn bonus-btn bonus-btn-1" onclick="showRewardedPopup()">
+            🎁 Watch Popup Ad & Earn (+100 SHIB)
+        </button>
+        
+        <button class="group-btn bonus-btn bonus-btn-2" onclick="showRewardedInterstitial()">
+            📺 Watch Video Ad & Earn (+150 SHIB)
         </button>
 
         <button class="group-btn" onclick="toggleGroup('group1', this)">Task Group 1 (25 Links)</button>
@@ -483,34 +106,44 @@
         <div class="group-content" id="group2"></div>
     </div>
 
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="success-icon">✔</div>
+            <h3 style="color: #2ecc71;">Task Successful!</h3>
+            <p style="color: #666; font-size: 14px;">You have successfully completed the task.</p>
+            <div class="stats-box">
+                <p>Reward Earned: <strong id="dynamic-reward">+25 SHIB</strong></p>
+                <p>Total Balance: <strong id="popup-total-shib">0</strong> SHIB</p>
+                <p>Converted Value: <strong style="color:#27ae60;">$<span id="popup-total-usd">0.0000</span> USD</strong></p>
+            </div>
+            <button class="btn-submit" onclick="closeSuccessModal()">Awesome! Continue</button>
+        </div>
+    </div>
+
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <h3 style="text-align: center;">Withdraw Funds</h3>
+            <p style="font-size: 13px; color: #666; text-align: center; margin-bottom: 20px;">Minimum withdrawal is 335,000 SHIB</p>
+            <div class="form-group"><label>Payment Method</label><select id="withdrawMethod"><option value="Binance">Binance</option><option value="BEP20">BEP20 Address</option></select></div>
+            <div class="form-group"><label>Wallet Address</label><input type="text" id="withdrawAddress" placeholder="Enter ID or Address" required></div>
+            <div class="modal-buttons"><button class="btn-submit" onclick="submitWithdraw()">Submit</button><button class="btn-cancel" onclick="closeWithdrawModal()">Cancel</button></div>
+        </div>
+    </div>
+
     <script>
-        // ================= TELEGRAM SDK INITIALIZATION =================
         const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand(); // টেলিগ্রামে ফুলস্ক্রিন করবে
-        // ==============================================================
+        tg.ready(); tg.expand();
 
-        // ================= AUTO IN-APP AD SETUP =======================
-        // অ্যাপ ওপেন হওয়ার সাথে সাথেই ব্যাকগ্রাউন্ডে অটোমেটিক অ্যাড রেডি হবে
-        if (typeof show_10712237 === 'function') {
-            try {
-                show_10712237({
-                  type: 'inApp',
-                  inAppSettings: {
-                    frequency: 2,
-                    capping: 0.1,
-                    interval: 30,
-                    timeout: 5,
-                    everyPage: false
-                  }
-                });
-            } catch (e) {
-                console.log("Auto ad failed to load:", e);
-            }
+        // অটোমেটিক ইন-অ্যাপ অ্যাড
+        if (typeof show_10714987 === 'function') {
+            try { 
+                show_10714987({ 
+                    type: 'inApp', 
+                    inAppSettings: { frequency: 5, capping: 0.1, interval: 15, timeout: 3, everyPage: false }
+                }); 
+            } catch (e) {}
         }
-        // ==============================================================
 
-        // Links Data (আপনার আগের ৪৫টি লিংক অক্ষত আছে)
         const group1Links = [
             "https://www.effectivegatecpm.com/kyi071pib?key=f97ab34f903ea845e2d6e024b4eb4802", "https://www.effectivegatecpm.com/h5i0v8cj?key=b84cdb24e61ca63ce399c60aed1494cb",
             "https://www.effectivegatecpm.com/j5801bm8ra?key=0434dc1a443644cfa9bea67db8fed92f", "https://www.effectivegatecpm.com/w4pfsi9wj?key=b1c2d91a66df19212575e70a95e0c71b",
@@ -535,16 +168,15 @@
             "https://omg10.com/4/10711259", "https://omg10.com/4/10711252", "https://omg10.com/4/10711245", "https://omg10.com/4/10711250"
         ];
 
-        // Economics Settings
         const SHIB_PER_CLICK = 25;
         const SHIB_TO_USD_RATE = 0.00003; 
-        const COOLDOWN_TIME = 30 * 60 * 1000; 
-        const MIN_WITHDRAW_SHIB = 335000; 
+        const COOLDOWN_TIME = 30 * 60 * 1000; // ৩০ মিনিট
+        const BACKGROUND_WAIT_TIME = 15000; // ১৫ সেকেন্ড
 
-        // Load Balance
         let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
-        
-        // Update Displays
+        let activeCheckInterval = null; // ব্যাকগ্রাউন্ড টাইমার ট্র্যাকার
+
+        // ব্যালেন্স আপডেট ও শো করার ফাংশন
         function updateDisplay() {
             const usdValue = currentShibBalance * SHIB_TO_USD_RATE;
             document.getElementById('user-balance-shib').innerText = currentShibBalance.toLocaleString();
@@ -552,118 +184,160 @@
             document.getElementById('popup-total-shib').innerText = currentShibBalance.toLocaleString();
             document.getElementById('popup-total-usd').innerText = usdValue.toFixed(4);
         }
-        
         updateDisplay();
 
-        // Success Modal Logic
         function showSuccessModal(rewardAmount) {
             document.getElementById('dynamic-reward').innerText = `+${rewardAmount} SHIB`;
             document.getElementById('successModal').style.display = 'flex';
-            
-            // হ্যাপটিক ফিডব্যাক (মোবাইলে ভাইব্রেশন)
-            if(tg.HapticFeedback) {
-                tg.HapticFeedback.notificationOccurred('success');
+            if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        }
+        function closeSuccessModal() { document.getElementById('successModal').style.display = 'none'; }
+        function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'flex'; }
+        function closeWithdrawModal() { document.getElementById('withdrawModal').style.display = 'none'; }
+        
+        function submitWithdraw() {
+            if (currentShibBalance < MIN_WITHDRAW_SHIB) return tg.showAlert("Insufficient Balance!");
+            const address = document.getElementById('withdrawAddress').value;
+            if (address.trim() === "") return tg.showAlert("Please enter Address.");
+            tg.showAlert(`Success! Processing withdrawal.`);
+            currentShibBalance = 0; localStorage.setItem('shib_balance', currentShibBalance); updateDisplay();
+            closeWithdrawModal(); document.getElementById('withdrawAddress').value = ""; 
+        }
+
+        // বোনাস অ্যাড
+        function showRewardedPopup() {
+            if (typeof show_10714987 === 'function') {
+                show_10714987('pop').then(() => {
+                    currentShibBalance += 100; localStorage.setItem('shib_balance', currentShibBalance);
+                    updateDisplay(); showSuccessModal(100);
+                }).catch(e => tg.showAlert('Ad error or not ready. Try again in a moment.'));
+            } else tg.showAlert('Ads are loading, please wait...');
+        }
+
+        function showRewardedInterstitial() {
+            if (typeof show_10714987 === 'function') {
+                show_10714987().then(() => {
+                    currentShibBalance += 150; localStorage.setItem('shib_balance', currentShibBalance);
+                    updateDisplay(); showSuccessModal(150);
+                }).catch(e => tg.showAlert('Ad error or not ready. Try again in a moment.'));
+            } else tg.showAlert('Ads are loading, please wait...');
+        }
+
+        // ================= NEW: STRICT BACKGROUND TIMER LOGIC =================
+        function processTask(link, buttonId, uniqueId, storageKey) {
+            // ১. একটি টাস্ক চলাকালীন অন্যটিতে ক্লিক বন্ধ রাখা
+            if (localStorage.getItem('pending_task')) {
+                tg.showAlert("Please wait, a task is already processing!");
+                return;
             }
+
+            const button = document.getElementById(buttonId);
+            
+            // ২. লিংক ওপেন
+            if(window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.openLink) {
+                window.Telegram.WebApp.openLink(link);
+            } else {
+                window.open(link, '_blank');
+            }
+
+            // ৩. ১৫ সেকেন্ডের টার্গেট টাইম সেভ করা (যাতে ব্রাউজার পজ করলেও সমস্যা না হয়)
+            const targetTime = Date.now() + BACKGROUND_WAIT_TIME;
+            
+            localStorage.setItem('pending_task', JSON.stringify({
+                buttonId: buttonId,
+                uniqueId: uniqueId,
+                storageKey: storageKey,
+                targetTime: targetTime,
+                reward: SHIB_PER_CLICK
+            }));
+
+            button.disabled = true;
+            
+            // ৪. ট্র্যাকিং শুরু
+            checkPendingTask(); 
         }
 
-        function closeSuccessModal() {
-            document.getElementById('successModal').style.display = 'none';
-        }
+        function checkPendingTask() {
+            const pendingStr = localStorage.getItem('pending_task');
+            if (!pendingStr) return; // কোনো কাজ পেন্ডিং না থাকলে রিটার্ন করবে
 
-        // ================= BONUS AD FUNCTION =================
-        function showBonusAd() {
-            if (typeof show_10712237 === 'function') {
-                show_10712237('pop').then(() => {
-                    // ইউজার অ্যাড পুরোপুরি দেখলে 100 SHIB পাবে
-                    currentShibBalance += 100;
+            const pending = JSON.parse(pendingStr);
+            const button = document.getElementById(pending.buttonId);
+            const timerSpan = document.getElementById(`timer-${pending.uniqueId}`);
+            
+            if (!button) {
+                localStorage.removeItem('pending_task');
+                return;
+            }
+
+            if(timerSpan) timerSpan.style.display = 'inline-block';
+            if (activeCheckInterval) clearInterval(activeCheckInterval);
+
+            // স্মার্ট টাইমার যা লোকাল স্টোরেজ থেকে সময় হিসাব করবে
+            activeCheckInterval = setInterval(() => {
+                const now = Date.now();
+                const timeLeft = Math.ceil((pending.targetTime - now) / 1000);
+
+                if (timeLeft > 0) {
+                    if(timerSpan) timerSpan.innerText = `অপেক্ষা: ${timeLeft}s`;
+                } else {
+                    // ১৫ সেকেন্ড পার হয়ে গেছে!
+                    clearInterval(activeCheckInterval);
+                    if(timerSpan) {
+                        timerSpan.style.display = 'none';
+                        timerSpan.innerText = "";
+                    }
+                    
+                    // পেন্ডিং টাস্ক রিমুভ করা
+                    localStorage.removeItem('pending_task');
+
+                    // ব্যালেন্স যোগ করা
+                    currentShibBalance += pending.reward;
                     localStorage.setItem('shib_balance', currentShibBalance);
                     updateDisplay();
-                    showSuccessModal(100);
-                }).catch(e => {
-                    tg.showAlert('Ad is not ready yet or was closed. Please try again later.');
-                });
-            } else {
-                tg.showAlert('Ad system is still loading. Please wait a moment.');
-            }
-        }
-        // =======================================================
+                    
+                    // সাকসেস নোটিফিকেশন শো করা (ইউজার যখন অ্যাপে ফিরবে তখন এটি সরাসরি স্ক্রিনে ভেসে উঠবে)
+                    showSuccessModal(pending.reward);
 
-        // Withdraw Logic
-        function openWithdrawModal() {
-            document.getElementById('withdrawModal').style.display = 'flex';
+                    // ৩০ মিনিটের কুলডাউন (Wait) শুরু করা
+                    const endTime = Date.now() + COOLDOWN_TIME;
+                    localStorage.setItem(pending.storageKey, endTime);
+                    startButtonTimer(button, pending.uniqueId, endTime, pending.storageKey);
+                }
+            }, 1000);
         }
 
-        function closeWithdrawModal() {
-            document.getElementById('withdrawModal').style.display = 'none';
-        }
+        // ইউজার অ্যাড দেখে অন্য ট্যাব/অ্যাপ থেকে ফিরে এলে যেন তৎক্ষণাৎ ব্যালেন্স আপডেট হয়
+        window.addEventListener('focus', checkPendingTask);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') checkPendingTask();
+        });
+        // ======================================================================
 
-        function submitWithdraw() {
-            if (currentShibBalance < MIN_WITHDRAW_SHIB) {
-                tg.showAlert(`Insufficient Balance!\nYou need at least ${MIN_WITHDRAW_SHIB.toLocaleString()} SHIB to withdraw.`);
-                return;
-            }
-
-            const method = document.getElementById('withdrawMethod').value;
-            const address = document.getElementById('withdrawAddress').value;
-
-            if (address.trim() === "") {
-                tg.showAlert("Please enter your Wallet Address or Binance ID.");
-                return;
-            }
-
-            const finalUsd = (currentShibBalance * SHIB_TO_USD_RATE).toFixed(2);
-            tg.showAlert(`Success! Withdrawal of ${currentShibBalance.toLocaleString()} SHIB via ${method} submitted.\nAllow 24-48 hours.`);
-            
-            currentShibBalance = 0;
-            localStorage.setItem('shib_balance', currentShibBalance);
-            updateDisplay();
-            
-            closeWithdrawModal();
-            document.getElementById('withdrawAddress').value = ""; 
-        }
-
-        // Button Creation Function (আগের মতোই আছে)
         function createButtons(linksArray, containerId, groupIdPrefix) {
             const container = document.getElementById(containerId);
-            
             linksArray.forEach((link, index) => {
-                const btnNumber = index + 1;
                 const uniqueId = `${groupIdPrefix}-${index}`;
                 const storageKey = `cooldown_time_${uniqueId}`;
+                const buttonId = `btn-${uniqueId}`;
                 
                 const button = document.createElement('button');
-                button.className = 'ad-btn';
-                button.id = `btn-${uniqueId}`;
-                button.innerHTML = `Task ${btnNumber} <span class="timer-text" id="timer-${uniqueId}" style="display:none;"></span>`;
+                button.className = 'ad-btn'; 
+                button.id = buttonId;
+                button.innerHTML = `Task ${index + 1} <span class="timer-text" id="timer-${uniqueId}" style="display:none;"></span>`;
                 
                 button.onclick = function() {
-                    // ওপেন লিঙ্ক
-                    window.open(link, '_blank');
-
-                    // ব্যালেন্স যোগ
-                    currentShibBalance += SHIB_PER_CLICK;
-                    localStorage.setItem('shib_balance', currentShibBalance);
-                    updateDisplay();
-                    
-                    setTimeout(() => {
-                        showSuccessModal(SHIB_PER_CLICK);
-                    }, 500); 
-                    
-                    const endTime = Date.now() + COOLDOWN_TIME;
-                    localStorage.setItem(storageKey, endTime);
-                    
-                    startTimer(button, uniqueId, endTime, storageKey);
+                    processTask(link, buttonId, uniqueId, storageKey);
                 };
                 
                 container.appendChild(button);
 
+                // আগে থেকে কুলডাউন (৩০ মিনিট) থাকলে সেটি চেক করা
                 const savedEndTime = localStorage.getItem(storageKey);
-                if (savedEndTime) {
-                    if (Date.now() < savedEndTime) {
-                        startTimer(button, uniqueId, savedEndTime, storageKey);
-                    } else {
-                        localStorage.removeItem(storageKey);
-                    }
+                if (savedEndTime && Date.now() < savedEndTime) {
+                    startButtonTimer(button, uniqueId, savedEndTime, storageKey);
+                } else {
+                    localStorage.removeItem(storageKey);
                 }
             });
         }
@@ -671,50 +345,48 @@
         createButtons(group1Links, 'group1', 'g1');
         createButtons(group2Links, 'group2', 'g2');
 
+        // পেজ রিলোড দেওয়ার পরেও যদি কোনো কাজ ১৫ সেকেন্ডের পেন্ডিং অবস্থায় থাকে, সেটি চেক করবে
+        checkPendingTask();
+
         function toggleGroup(groupId, btnElement) {
             const content = document.getElementById(groupId);
-            if (content.style.display === "grid") {
-                content.style.display = "none";
-                btnElement.classList.remove("active");
-            } else {
-                content.style.display = "grid";
-                btnElement.classList.add("active");
-            }
+            if (content.style.display === "grid") { content.style.display = "none"; btnElement.classList.remove("active"); } 
+            else { content.style.display = "grid"; btnElement.classList.add("active"); }
         }
 
         function formatTime(secondsLeft) {
-            const minutes = Math.floor(secondsLeft / 60);
-            const seconds = secondsLeft % 60;
-            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-            const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
-            return `${formattedMinutes}:${formattedSeconds}`;
+            const m = Math.floor(secondsLeft / 60); const s = secondsLeft % 60;
+            return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
         }
 
-        function startTimer(button, uniqueId, endTime, storageKey) {
+        function startButtonTimer(button, uniqueId, endTime, storageKey) {
             button.disabled = true;
             const timerSpan = document.getElementById(`timer-${uniqueId}`);
-            timerSpan.style.display = 'inline-block'; 
+            if(timerSpan) timerSpan.style.display = 'inline-block'; 
             
             const updateInterval = setInterval(() => {
-                const now = Date.now();
-                const timeLeft = Math.ceil((endTime - now) / 1000); 
-                
-                if (timeLeft > 0) {
-                    timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`;
+                const timeLeft = Math.ceil((endTime - Date.now()) / 1000); 
+                if (timeLeft > 0) { 
+                    if(timerSpan) timerSpan.innerText = `Wait: ${formatTime(timeLeft)}`; 
                 } else {
-                    clearInterval(updateInterval);
+                    clearInterval(updateInterval); 
                     button.disabled = false;
-                    timerSpan.style.display = 'none'; 
+                    if(timerSpan) {
+                        timerSpan.style.display = 'none'; 
+                        timerSpan.innerText = "";
+                    }
                     localStorage.removeItem(storageKey);
                 }
             }, 1000);
             
             const initialTimeLeft = Math.ceil((endTime - Date.now()) / 1000);
-            if(initialTimeLeft > 0) {
+            if(initialTimeLeft > 0 && timerSpan) {
                 timerSpan.innerText = `Wait: ${formatTime(initialTimeLeft)}`;
+            } else {
+                button.disabled = false;
+                if(timerSpan) timerSpan.style.display = 'none';
             }
         }
     </script>
-
 </body>
 </html>
