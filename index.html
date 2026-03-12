@@ -7,6 +7,9 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
     <script src='//libtl.com/sdk.js' data-zone='10712237' data-sdk='show_10712237'></script>
     <script src='//libtl.com/sdk.js' data-zone='10714987' data-sdk='show_10714987'></script>
     <script src='//libtl.com/sdk.js' data-zone='10701142' data-sdk='show_10701142'></script>
@@ -195,15 +198,32 @@
     </div>
 
     <script>
+        // ================= FIREBASE INITIALIZATION =================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCxS5Pg8qXUo4XJ1R7ZPI-NXLMbpmOgXc",
+            authDomain: "botshiba-inu.firebaseapp.com",
+            projectId: "botshiba-inu",
+            storageBucket: "botshiba-inu.firebasestorage.app",
+            messagingSenderId: "928492016030",
+            appId: "1:928492016030:web:f6b4c9134f88b7def4868f",
+            measurementId: "G-2W5L9J4H46"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         const tg = window.Telegram.WebApp;
         tg.ready(); tg.expand();
 
-        // ================= FETCH TELEGRAM USER & REFERRAL LOGIC =================
+        // ================= FETCH TELEGRAM USER & FIREBASE SYNC =================
         const tgUser = tg.initDataUnsafe?.user;
+        const BOT_USERNAME = "erning_99_bot"; 
         
-        // আপনার টেলিগ্রাম বট এর ইউজারনেম এখানে দিতে হবে (যেমন: ShibaEarnBot)
-        const BOT_USERNAME = "YourTelegramBotUsername"; 
+        // Setup User Identifiers
+        let userId = tgUser ? tgUser.id.toString() : "guest_" + Math.floor(Math.random() * 10000);
+        let userName = tgUser ? (tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '')) : "ShibaEarn User";
         let userRefLink = "https://t.me/" + BOT_USERNAME + "?start=default_ref";
+
+        let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
 
         if (tgUser) {
             if (tgUser.photo_url) {
@@ -211,15 +231,37 @@
             } else {
                 document.getElementById('user-profile-pic').src = `https://ui-avatars.com/api/?name=${tgUser.first_name}&background=f6d365&color=fff&size=85`;
             }
-            
-            const fullName = tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '');
-            document.getElementById('user-name').innerText = fullName;
+            document.getElementById('user-name').innerText = userName;
 
             const refId = tgUser.username ? tgUser.username : tgUser.id;
             userRefLink = `https://t.me/${BOT_USERNAME}?start=${refId}`;
             document.getElementById('ref-link').value = userRefLink;
         } else {
-            document.getElementById('user-name').innerText = "ShibaEarn User";
+            document.getElementById('user-name').innerText = userName;
+        }
+
+        // Fetch User Data from Firebase on Load
+        db.collection('users').doc(userId).get().then((doc) => {
+            if (doc.exists) {
+                // If user exists in DB, use their DB balance
+                currentShibBalance = doc.data().balance || 0;
+                localStorage.setItem('shib_balance', currentShibBalance);
+                updateDisplay();
+            } else {
+                // If new user, create their document
+                db.collection('users').doc(userId).set({
+                    name: userName,
+                    balance: currentShibBalance,
+                    joinedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            }
+        });
+
+        // Function to update balance in Firebase
+        function syncBalanceToFirebase(newBalance) {
+            db.collection('users').doc(userId).update({
+                balance: newBalance
+            }).catch(e => console.log("Firebase sync error:", e));
         }
 
         function copyRefLink() {
@@ -275,7 +317,6 @@
         
         const MIN_WITHDRAW_SHIB = 167500; 
 
-        let currentShibBalance = parseInt(localStorage.getItem('shib_balance')) || 0;
         let activeCheckInterval = null;
 
         function updateDisplay() {
@@ -304,9 +345,37 @@
             const method = document.getElementById('withdrawMethod').value;
             if (address.trim() === "") return tg.showAlert("Please enter your ID or Address.");
             
-            tg.showAlert(`Success!\nWithdrawal of ${currentShibBalance.toLocaleString()} SHIB via ${method} is processing.`);
-            currentShibBalance = 0; localStorage.setItem('shib_balance', currentShibBalance); updateDisplay();
-            closeWithdrawModal(); document.getElementById('withdrawAddress').value = ""; 
+            const withdrawAmount = currentShibBalance;
+            
+            // Deduct locally
+            currentShibBalance = 0; 
+            localStorage.setItem('shib_balance', currentShibBalance); 
+            updateDisplay();
+            
+            // Deduct in Firebase
+            syncBalanceToFirebase(0);
+
+            // Send Withdrawal Request to Firebase
+            db.collection('withdrawals').add({
+                userId: userId,
+                userName: userName,
+                method: method,
+                address: address,
+                amount: withdrawAmount,
+                status: "Pending",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                tg.showAlert(`Success!\nWithdrawal of ${withdrawAmount.toLocaleString()} SHIB via ${method} is processing.`);
+                closeWithdrawModal(); 
+                document.getElementById('withdrawAddress').value = ""; 
+            }).catch(err => {
+                // If it fails, give balance back
+                currentShibBalance = withdrawAmount;
+                localStorage.setItem('shib_balance', currentShibBalance);
+                updateDisplay();
+                syncBalanceToFirebase(withdrawAmount);
+                tg.showAlert("Error submitting request. Please try again later.");
+            });
         }
 
         function formatTime(secondsLeft) {
@@ -334,6 +403,7 @@
                 currentShibBalance += rewardAmount;
                 localStorage.setItem('shib_balance', currentShibBalance);
                 updateDisplay();
+                syncBalanceToFirebase(currentShibBalance); // Update to DB
                 showSuccessModal(rewardAmount);
 
                 const endTime = Date.now() + BONUS_COOLDOWN_TIME;
@@ -434,6 +504,7 @@
                     currentShibBalance += pending.reward;
                     localStorage.setItem('shib_balance', currentShibBalance);
                     updateDisplay();
+                    syncBalanceToFirebase(currentShibBalance); // Update to DB
                     
                     showSuccessModal(pending.reward);
 
